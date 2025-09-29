@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from "react-router-dom";
 import IconOverview from '../../Icons/IconOverview';
 import IconLeads from '../../Icons/IconLeads';
+import IconCompany from '../../Icons/IconCompany';
 
 const links = [
   {
@@ -11,10 +12,17 @@ const links = [
     iconActive: <IconOverview active />
   },
   {
-    to: "Lead",
+    to: "lead",
     name: "Lead",
     icon: <IconLeads />,
     iconActive: <IconLeads active />
+  },
+
+   {
+    to: "company",
+    name: "Company",
+    icon: <IconCompany />,
+    iconActive: <IconCompany active />
   },
 ];
 
@@ -24,7 +32,7 @@ const LeaderSidebar = ({ setIsOpen, isOpen }) => {
 
   useEffect(() => {
     const customPaths = {
-      '/admin/addlead': '/admin/Lead',
+      '/leader/addlead': '/leader/Lead',
     };
     const newPath = customPaths[location.pathname] || location.pathname;
     setIsActive(newPath);

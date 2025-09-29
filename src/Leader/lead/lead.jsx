@@ -1,60 +1,109 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from "react";
+import useGet from "../../Hooks/useGet";
+import Table from "../../Ui/Table"; 
+import Loading from "../../Ui/Loading";
+import { toast ,ToastContainer} from "react-toastify";
+import Header from "../../Ui/Header";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+const Lead = () => {
+ const { data, loading, error, status, get } = useGet();
+  const [searchQuery, setSearchQuery] = useState("");
 
-const schema = z.object({
-  email: z
-    .string()
-    .min(1, "البريد الإلكتروني مطلوب")
-    .email("صيغة البريد غير صحيحة"),
+  useEffect(() => {
+    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads", 2, 1000); 
+  }, [get]);
 
-  username: z
-    .string()
-    .min(1, "اسم المستخدم مطلوب")
-    .min(3, "اسم المستخدم لازم يكون 3 أحرف على الأقل"),
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (status === 200) {
+      toast.success("Commissions loaded successfully 🎉");
+    }
+  }, [status]);
+
+  const leadss = data?.leads || [];
+const changeSales = async (leadId, newSalesId) => {
+  try {
+    await axios.post(
+      `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads/transfer/${leadId}`,
+      { salesId: newSalesId },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    toast.success("✅ Sales changed successfully");
+    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads", 2, 1000); 
+  } catch (error) {
+    toast.error("❌ Failed to change sales");
+  }
+};
+
+   const columns = [
+    { key: "leads", label: "Lead Name", render: (_, row) => row.name|| "—", },
+    {
+      key: "sales_name",
+      label: "Sales Name",
+      render: (_, row) => row.sales_id?.name || "—",
+    },
+    {
+      key: "leader_name",
+      label: "Leader Name",
+      render: (_, row) => row.sales_id?.leader_id?.name || "—",
+    },
+    {
+        key: "actions",
+    label: "Change Sales",
+   render: (_, row) => (
+  <select
+    onChange={(e) => changeSales(row._id, e.target.value)}
+    value={row.sales_id?._id || ""} 
+    className="px-3 py-1 bg-four text-white rounded border border-gray-600"
+  >
+    <option value="" disabled>
+      Select Sales
+    </option>
+    {data?.salesOptions?.map((sales) => (
+      <option key={sales._id} value={sales._id}>
+        {sales.name}
+      </option>
+    ))}
+  </select>
+),
+
+    }
+  ];
+const filteredProducts = leadss.filter((p) => {
+  const search = searchQuery.toLowerCase();
+
+  return Object.values(p).some((value) =>
+    String(value || "").toLowerCase().includes(search)
+  );
 });
 
-export default function Lead() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-
-  const onSubmit = (data) => {
-    console.log("✅ البيانات:", data);
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-72">
-      <div>
-        <input
-          type="text"
-          placeholder="البريد الإلكتروني"
-          {...register("email")}
-          className="border p-2 rounded w-full"
-        />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-      </div>
+    <div className="p-4  text-white">
+  <Header
+        title="Lead"
+        like={true}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+      {loading ? (
+        <Loading rows={5} cols={6} />
+      ) : (
+        <Table columns={columns} data={filteredProducts} pageSize={5} />
+      )}
+            <ToastContainer position="top-right" autoClose={3000} />
 
-      <div>
-        <input
-          type="text"
-          placeholder="اسم المستخدم"
-          {...register("username")}
-          className="border p-2 rounded w-full"
-        />
-        {errors.username && (
-          <p className="text-red-500">{errors.username.message}</p>
-        )}
-      </div>
-
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        حفظ
-      </button>
-    </form>
+    </div>
   );
-}
+};
+export default Lead

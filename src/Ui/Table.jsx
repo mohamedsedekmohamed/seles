@@ -52,7 +52,7 @@ const Table = ({ columns, data, charLimit = 30, pageSize =10 }) => {
         </tbody>
       </table>
 
-       <div className="flex items-center justify-center gap-2 p-4 bg-gray-800">
+       <div className="flex items-center justify-center gap-2 p-4  bg-gray-800">
   <button
     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
     disabled={currentPage === 1}

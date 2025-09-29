@@ -23,12 +23,18 @@ const Login = ({ setRole }) => {
     const { token, role } = res.data.data; 
 
     localStorage.setItem("token", token);
-    setRole(role);
+setRole(role.toLowerCase());
 
     toast.success("✅ Login successful!");
 
-    if (role.toLowerCase() === "leader") navigate("/leader/overview");
-    if (role.toLowerCase() === "salesman") navigate("/seller/overview");
+    if (role.toLowerCase() === "sales leader"){
+      navigate("/leader/overview");
+    } 
+    if (role.toLowerCase() === "salesman")
+      {
+        navigate("/seller/overview");
+      }
+        
   } catch (err) {
     const msg =
       err.response?.data?.message || "❌ Invalid email or password";

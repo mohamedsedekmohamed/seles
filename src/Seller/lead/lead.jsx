@@ -250,7 +250,7 @@ const handleStatusChange = async (id, newStatus) => {
           </div>
 
           {/* Sub Tabs */}
-          <div className="flex justify-around gap-4 mb-4">
+          <div className="flex justify-around gap-4 mb-4 flex-wrap">
             {["default", "demo", "approve", "reject", "transfer"].map((tab) => (
               <button
                 key={tab}
