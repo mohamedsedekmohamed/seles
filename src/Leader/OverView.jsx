@@ -21,7 +21,6 @@ const OverView = () => {
   const { data, loading, error, status, get } = useGet();
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
-
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10; 
@@ -36,8 +35,10 @@ const OverView = () => {
 
   useEffect(() => {
     fetchData();
-  }, [month, year]);
-
+  }, []);
+const Refresh=()=>{
+  fetchData();
+}
   useEffect(() => {
     if (error) toast.error(`Error: ${error}`);
     if (status === 200 && data) toast.success("Leader data loaded 🎉");
@@ -98,13 +99,16 @@ const OverView = () => {
               className="px-3 py-2 rounded-lg border bg-white w-24"
             />
 
-            <button
-              onClick={fetchData}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-            >
-              <FiRefreshCw />
-              Refresh
-            </button>
+          <button
+  onClick={Refresh}
+  disabled={loading} // هنا هنعطله وقت اللودنج
+  className={`px-4 py-2 rounded-lg flex items-center gap-2
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 text-white"}`}
+>
+  <FiRefreshCw className={loading ? "animate-spin" : ""} />
+  {loading ? "Loading..." : "Refresh"}
+</button>
+
           </div>
         </div>
 

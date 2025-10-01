@@ -5,6 +5,7 @@ import Loading from "../../Ui/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useGet from "../../Hooks/useGet";
+import { useNavigate } from "react-router";
 
 const Scheduled = () => {
   const { data, loading, error, status, get } = useGet();
@@ -41,17 +42,34 @@ const Scheduled = () => {
       o.notes?.toLowerCase().includes(search)
     );
   });
+  const navigate = useNavigate();
+const handlePayment = (row) => {
+  navigate("/seller/EditScheduled", { state: { row } });
+};
 
   const columns = [
     { key: "lead_name", label: "Client Name" },
     { key: "lead_phone", label: "Client Phone" },
     { key: "sales_name", label: "Sales Rep" },
     {
+      key: "actions",
+      label: "Actions",
+      render: (_, row) => (
+        <button
+          onClick={() => handlePayment(row)}
+          className="px-3 py-1 text-sm rounded bg-four/50 text-white hover:bg-four/80"
+        >
+          Edit
+        </button>
+      ),
+    },
+    {
       key: "contact_date",
       label: "Date",
       render: (value) => new Date(value).toLocaleDateString(),
     },
     { key: "notes", label: "Notes" },
+    { key: "contact_time", label: "Contact Time" },
     {
       key: "status",
       label: "Status",
@@ -60,18 +78,20 @@ const Scheduled = () => {
   ];
 
   const tableData = filteredOffers.map((item) => ({
+    _id:item._id,
     lead_name: item.lead_id?.name,
     lead_phone: item.lead_id?.phone,
     sales_name: item.sales_id?.name,
     contact_date: item.contact_date,
     notes: item.notes,
     status: item.status,
+    contact_time: item.contact_time,
   }));
 
   return (
     <div className="p-4 text-white">
       <Header
-      nav="/seller/addscheduled"
+        nav="/seller/addscheduled"
         title="Scheduled"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

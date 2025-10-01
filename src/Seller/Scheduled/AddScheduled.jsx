@@ -15,6 +15,7 @@ const AddScheduled = () => {
     lead_id: "",
     sales_id: "",
     contact_date: "",
+      contact_time: "", 
     notes: "",
   });
   const nav = useNavigate();
@@ -49,33 +50,55 @@ const AddScheduled = () => {
   const handleChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (!form.lead_id) {
+  toast.error("Please select a lead ❌");
+  return;
+}
+if (!form.sales_id) {
+  toast.error("Please select a sales person ❌");
+  return;
+}
+if (!form.contact_date) {
+  toast.error("Please choose a contact date ❌");
+  return;
+}
+if (!form.notes) {
+  toast.error("Please enter your notes ❌");
+  return;
+}
+if (!form.contact_time) {
+  toast.error("Please choose a contact time ❌");
+  return;
+}
 
-    if (!form.lead_id || !form.sales_id || !form.contact_date) {
-      toast.error("Please fill all required fields ❌");
-      return;
-    }
-
+  try {
     const res = await post(
       "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/schedule-contact",
       form
     );
 
-    if (res) {
+    if (res.success) {
       toast.success("Scheduled contact added successfully 🎉");
-      setForm({
-        lead_id: "",
-        sales_id: "",
-        contact_date: "",
-        notes: "",
-      });
-      nav("/seller/addscheduled")
+  setForm({
+  lead_id: "",
+  sales_id: "",
+  contact_date: "",
+  contact_time: "",  
+  notes: "",
+});
+
+      nav("/seller/scheduled");
     } else {
-      toast.error("Failed to add scheduled contact ❌");
+      toast.error(res.error?.message || "Failed to add scheduled contact ❌");
     }
-  };
+  } catch (error) {
+    toast.error(error?.error.details.mmessage  || "Something went wrong ❌");
+  }
+};
+
 
   return (
     <div className="p-6 text-white">
@@ -109,6 +132,13 @@ const AddScheduled = () => {
           value={form.contact_date}
           onChange={(e) => handleChange("contact_date", e.target.value)}
         />
+<InputField
+  placeholder="Contact Time"
+  name="contact_time"
+  type="time"   
+  value={form.contact_time}
+  onChange={(e) => handleChange("contact_time", e.target.value)}
+/>
 
         <InputField
           placeholder="Notes"

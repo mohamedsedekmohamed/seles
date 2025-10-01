@@ -61,7 +61,9 @@ const SellerSidebar = ({ setIsOpen, isOpen }) => {
   useEffect(() => {
     const customPaths = {
       '/seller/addscheduled': '/seller/scheduled',
+      '/seller/EditScheduled': '/seller/scheduled',
       '/seller/addpayment': '/seller/payment',
+      '/seller/AddPaymentFromLead': '/seller/payment',
       '/seller/addlead': '/seller/lead',
       '/seller/editlead': '/seller/lead',
     };

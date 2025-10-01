@@ -127,7 +127,7 @@ if (!form.activity_id) {
           disabled={loading}
           className="bg-four hover:bg-four/75 disabled:opacity-50 transition px-6 py-3 rounded-xl font-medium"
         >
-          {loading ? "Saving..." : "Save Payment "}
+          {loading ? "Saving..." : "Save Lead "}
         </button>
       </form>
 

@@ -20,9 +20,12 @@ const Login = ({ setRole }) => {
       { email, password }
     );
 
-    const { token, role } = res.data.data; 
+    const { token, role, name, email: userEmail } = res.data.data; 
 
-    localStorage.setItem("token", token);
+  localStorage.setItem("token", token);
+  localStorage.setItem("name", name);
+  localStorage.setItem("email", userEmail);
+
 setRole(role.toLowerCase());
 
     toast.success("✅ Login successful!");

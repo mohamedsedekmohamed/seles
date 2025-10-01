@@ -56,7 +56,7 @@ const EditLead = () => {
         form
       );
       toast.success("Lead updated successfully 🎉");
-      setTimeout(() => nav("/seller/lead"), 1500);
+     nav("/seller/lead")
     } catch (err) {
       toast.error("Update failed ❌");
     }

@@ -25,7 +25,7 @@ const Payment = () => {
   }, [error]);
 
   useEffect(() => {
-    if (status === 200) toast.success("Payments loaded successfully 🎉");
+    if (status === 200) toast.success("Payments leaded successfully 🎉");
   }, [status]);
 
   const payments = data || {};
@@ -64,6 +64,12 @@ const Payment = () => {
             <FiXCircle /> Reject
           </span>
         ),
+    },
+    {
+      key: "proof_image",
+      label: "Image",
+      render: (value) =>
+       <img src={value} className="w-5 h-5"/>
     },
     {
       key: "sale_date",

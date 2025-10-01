@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 const SellerNavBar = ({ setRole }) => {
   const navigate = useNavigate();
-
+const name=localStorage.getItem("name")
+const userEmail=localStorage.getItem("email")
   const loghandled = () => {
     localStorage.removeItem("token");
     setRole(null);
@@ -11,17 +12,17 @@ const SellerNavBar = ({ setRole }) => {
   };
 
   return (
-    <div className="w-full flex justify-between items-center relative">
-      <div className='flex items-center gap-0.5'>
-        <div className='flex flex-col'>
-          <span className='text-[12px] md:text-2xl font-bold text-white'> Admin</span>
-          <div className='flex items-center text-five gap-0.5'>
-            <span className='text-[12px] md:text-[14px] font-bold text-five'>
-              Admin.@gmail.com
-            </span>
+  <div className="w-full flex justify-between items-center relative">
+      <div className="flex items-center gap-0.5">
+        <div className="flex flex-col">
+          <span className="text-[12px] md:text-2xl font-bold text-white">{name}</span>
+          <div className="flex items-center text-five gap-0.5">
+            <span className="text-[12px] md:text-[14px] font-bold text-five">
+{userEmail}            </span>
           </div>
         </div>
       </div>
+
 
       <div className='flex items-center gap-0.5'>
         <button onClick={loghandled}>

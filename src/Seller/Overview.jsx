@@ -8,6 +8,8 @@ import {
   FiBarChart,
   FiEye,
 } from "react-icons/fi";
+import { TbTargetArrow } from "react-icons/tb";
+import { GiOnTarget } from "react-icons/gi";
 import { BiBuildings } from "react-icons/bi";
 import { BsPerson } from "react-icons/bs";
 import { toast, ToastContainer } from "react-toastify";
@@ -59,12 +61,9 @@ const Overview = () => {
   useEffect(() => {
     if (error) {
       toast.error(`Error loading data: ${error}`);
-      console.error("API Error:", error);
     }
     if (status === 200 && data) {
       toast.success("Sales data loaded successfully 🎉");
-      console.log("Full API Response:", data);
-      console.log("Sales Data:", data?.data?.data);
     }
   }, [error, status, data]);
 
@@ -75,6 +74,8 @@ const Overview = () => {
     NoOfReject_company_leads: 0,
     NoOfReject_my_leads: 0,
     interestedCount: 0,
+    total_target: 0,
+    my_target: 0,
   };
 
   const totalApproved =
@@ -83,16 +84,11 @@ const Overview = () => {
     (sales.NoOfReject_company_leads ?? 0) + (sales.NoOfReject_my_leads ?? 0);
 
   if (loading) {
-    return (
-            <Loading rows={10} cols={6} />
-
-    );
+    return <Loading rows={10} cols={6} />;
   }
 
- 
-
   return (
-    <div className="min-h-screen  bg-indigo-100 p-6">
+    <div className="min-h-screen bg-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -117,6 +113,13 @@ const Overview = () => {
             description="Total number of leads"
           />
           <StatCard
+            title="My Target "
+            value={sales.my_target ?? 0}
+            icon={GiOnTarget}
+            color="text-white"
+            bgColor="bg-green-300"
+          />
+          <StatCard
             title="Interested Leads"
             value={sales.interestedCount ?? 0}
             icon={FiTrendingUp}
@@ -139,6 +142,13 @@ const Overview = () => {
             color="text-red-600"
             bgColor="bg-red-100"
             description="Total rejections"
+          />
+          <StatCard
+            title="Total Target "
+            value={sales.total_target ?? 0}
+            icon={TbTargetArrow}
+            color="text-white"
+            bgColor="bg-yellow-300"
           />
         </div>
 
@@ -214,6 +224,13 @@ const Overview = () => {
                 total={sales.total_leads ?? 0}
                 color="bg-gradient-to-r from-red-400 to-red-600"
               />
+          
+              <ProgressBar
+                label="Company Target Progress"
+                value={totalApproved ?? 0}
+                total={sales.total_target ?? 0}
+                color="bg-gradient-to-r from-indigo-400 to-indigo-600"
+              />
             </div>
 
             {/* Summary */}
@@ -236,6 +253,24 @@ const Overview = () => {
                     %
                   </p>
                   <p className="text-sm text-gray-600 font-medium">Success Rate</p>
+                </div>
+                <div className="text-center bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <p className="text-2xl font-bold text-yellow-600">
+                    {sales.total_target > 0
+                      ? Math.round(((sales.my_target ?? 0) / (sales.total_target ?? 0)) * 100)
+                      : 0}
+                    %
+                  </p>
+                  <p className="text-sm text-gray-600 font-medium">My Target %</p>
+                </div>
+                <div className="text-center bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                  <p className="text-2xl font-bold text-indigo-600">
+                    {sales.total_target > 0
+                      ? Math.round(((totalApproved ?? 0) / (sales.total_target ?? 0)) * 100)
+                      : 0}
+                    %
+                  </p>
+                  <p className="text-sm text-gray-600 font-medium">Company Target %</p>
                 </div>
               </div>
             </div>

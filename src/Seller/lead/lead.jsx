@@ -159,7 +159,9 @@ const handleStatusChange = async (id, newStatus) => {
   });
 
   const navigate = useNavigate();
-
+const handlePayment = (row) => {
+    navigate("/seller/AddPaymentFromLead", { state: { row } });
+  };
   const handleEdit = (row) => {
     navigate("/seller/editlead", { state: row });
   };
@@ -202,6 +204,19 @@ const handleStatusChange = async (id, newStatus) => {
                 >
                   Edit
                 </button>
+                {subTab==="approve"&&(
+                   <button
+                  onClick={() => handlePayment(row._id)}
+                  className="px-3 py-1 text-sm rounded bg-four/50 text-white hover:bg-four/80"
+                >
+                  Payment
+                </button>
+                )
+                }
+             
+
+
+
               <select
               value={row.status}
               onChange={(e) => handleStatusChange(row._id, e.target.value)}

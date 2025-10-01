@@ -33,24 +33,29 @@ const Offer = () => {
       String(value || "").toLowerCase().includes(search)
     );
   });
+const columns = [
+  { key: "name", label: "Name" },
+  { key: "description", label: "Description" },
+  {
+    key: "start_date",
+    label: "Start Date",
+    render: (value) => new Date(value).toLocaleDateString(),
+  },
+  {
+    key: "end_date",
+    label: "End Date",
+    render: (value) => new Date(value).toLocaleDateString(),
+  },
+  { key: "discount_type", label: "Discount Type" },
+  { key: "discount_amount", label: "Discount Amount" },
+  { key: "subscription_details", label: "Subscription Details" },
+  { key: "setup_phase", label: "Setup Phase" },
+  { key: "product_id", label: "Product" },
+  { key: "price_month", label: "Price (Month)" },
+  { key: "price_quarter", label: "Price (Quarter)" },
+  { key: "price_year", label: "Price (Year)" },
+];
 
-  const columns = [
-    { key: "name", label: "Name" },
-    { key: "description", label: "Description" },
-    {
-      key: "start_date",
-      label: "Start Date",
-      render: (value) => new Date(value).toLocaleDateString(),
-    },
-    {
-      key: "end_date",
-      label: "End Date",
-      render: (value) => new Date(value).toLocaleDateString(),
-    },
-    { key: "discount_type", label: "Discount Type" },
-    { key: "discount_amount", label: "Discount Amount" },
-    { key: "product_id", label: "Product" },
-  ];
   return (
     <div className="p-4 text-white">
       <Header

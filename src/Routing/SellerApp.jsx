@@ -11,6 +11,8 @@ import AddPayment from '../Seller/Payment/AddPayment'
 import Payment from '../Seller/Payment/Payment'
 import Addlead from "../Seller/lead/Addlead";
 import EditLead from "../Seller/lead/EditLead";
+import AddPaymentFromLead from "../Seller/Payment/AddPaymentFromLead";
+import EditScheduled from "../Seller/Scheduled/EditScheduled";
 const SellerApp = ({ setRole }) => {
   return (
     <Routes>
@@ -25,7 +27,9 @@ const SellerApp = ({ setRole }) => {
         <Route path="scheduled" element={<Scheduled />} />
         <Route path="addscheduled" element={<AddScheduled />} />
         <Route path="payment" element={<Payment />} />
+        <Route path="EditScheduled" element={<EditScheduled />} />
         <Route path="Addpayment" element={<AddPayment />} />
+        <Route path="AddPaymentFromLead" element={<AddPaymentFromLead />} />
 <Route path="*" element={<Navigate to="overview" replace />} />
       </Route>
     </Routes>
