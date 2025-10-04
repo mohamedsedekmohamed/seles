@@ -129,7 +129,6 @@ const ImagePreview = ({ src }) => {
 
   return (
     <>
-      {/* الصورة الصغيرة داخل الجدول */}
       <img
         src={src}
         alt="proof"
@@ -137,11 +136,10 @@ const ImagePreview = ({ src }) => {
         onClick={() => setOpen(true)}
       />
 
-      {/* Popup يكبر الصورة */}
       {open && (
         <div
           className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-          onClick={() => setOpen(false)} // يقفل لما تدوس برا
+          onClick={() => setOpen(false)} 
         >
           <img
             src={src}

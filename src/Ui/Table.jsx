@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Table = ({ columns, data, charLimit = 30, pageSize = 10 }) => {
+const Table = ({ columns, data, charLimit = 25, pageSize = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [popupContent, setPopupContent] = useState(null); // store clicked text
 
@@ -42,17 +42,22 @@ const Table = ({ columns, data, charLimit = 30, pageSize = 10 }) => {
           const value = String(row[col.key] || "");
           const isTruncated = value.length > charLimit;
           return (
-            <td
-              key={col.key}
-              className="px-4 py-3 text-gray-300 cursor-pointer"
-              onClick={() =>
-                isTruncated ? setPopupContent(value) : null
-              }
-            >
-              {col.render
-                ? col.render(row[col.key], row)
-                : truncateText(value)}
-            </td>
+           <td
+  key={col.key}
+  className="px-4 py-3 text-gray-300 cursor-pointer"
+  onClick={() =>
+    isTruncated && !col.render ? setPopupContent(value) : null
+  }
+>
+  {col.render
+    ? (
+      <div onClick={(e) => e.stopPropagation()}>
+        {col.render(row[col.key], row)}
+      </div>
+    )
+    : truncateText(value)}
+</td>
+
           );
         })}
       </tr>

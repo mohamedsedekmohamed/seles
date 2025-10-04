@@ -75,8 +75,9 @@ const Company = () => {
 const columns = [
   { key: "leads", label: "Lead Name", render: (_, row) => row.name || "—" },
   { key: "phone", label: "Lead Phone", render: (_, row) => row.phone || "—" },
-  { key: "address", label: "Lead Address", render: (_, row) => row.address || "—" },
-
+  { key: "city", label: "City", render: (_, row) => row.city?.name|| "—" },
+  { key: "country", label: "Country", render: (_, row) => row.country?.name || "—" },
+  { key: "status", label: "Status", render: (_, row) => row.status || "—" },
   {
     key: "sales_id",
     label: "Sales",

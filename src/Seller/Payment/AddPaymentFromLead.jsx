@@ -103,14 +103,35 @@ const AddPaymentFromLead = ({ lead, onClose }) => {
         onChange={(e) => handleChange("amount", e.target.value)}
       />
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleChange("proof_image", e.target.value)}
-        className="file:mr-4 file:rounded-lg file:border-1 file:border-four 
-                   file:px-4 file:py-2 file:text-white file:cursor-pointer file:hover:bg-four 
-                   text-sm text-gray-300"
-      />
+    <div>
+  <label className="mb-2 block">Upload Proof Image</label>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleChange("proof_image", reader.result); // 👈 هنا Base64 بيتخزن
+      };
+      reader.readAsDataURL(file);
+    }}
+    className="file:mr-4 file:rounded-lg file:border-1 file:border-four  
+               file:px-4 file:py-2 file:text-white file:cursor-pointer 
+               file:hover:bg-four text-sm text-gray-600"
+  />
+
+  {/* 👇 لو عايز تعرض Preview */}
+  {form.proof_image && (
+    <img
+      src={form.proof_image}
+      alt="preview"
+      className="w-32 h-32 mt-3 rounded border"
+    />
+  )}
+</div>
 
       <button
         type="submit"

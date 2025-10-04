@@ -53,7 +53,7 @@ const Commission = () => {
             const isAchieved = item.my_level;
 
             return (
-              <div key={item.id || index} className="relative mb-8">
+              <div key={item.id || index} className="relative mb-8 px-5">
                 {/* الكارد */}
                 <div className={`flex ${isRight ? "justify-end" : "justify-start"} relative z-10`}>
                   <div
