@@ -1,142 +1,106 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Ui/Header";
 import Table from "../../Ui/Table";
 import Loading from "../../Ui/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useGet from "../../Hooks/useGet";
-import { useNavigate } from "react-router";
 import axios from "axios";
+import AddPaymentFromLead from "../Payment/AddPaymentFromLead";
 
 const Leads = () => {
-  const { data, loading, error, status, get } = useGet();
-const [edit,setEdit]=useState(false)
+  const { loading } = useGet(); // مش هنستخدم get هنا خلاص
+  const [edit, setEdit] = useState(false);
   const [mainTab, setMainTab] = useState("company");
   const [subTab, setSubTab] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [openPayment, setOpenPayment] = useState(false);
+  const [selectedLead, setSelectedLead] = useState(null);
+
   const [tabData, setTabData] = useState({
-    company: {
-      default: [],
-      demo: [],
-      approve: [],
-      reject: [],
-      transfer: [],
-    },
-    my: {
-      default: [],
-      demo: [],
-      approve: [],
-      reject: [],
-      transfer: [],
-    },
+    default: { company_leads: [], my_leads: [] },
+    active: { company_leads: [], my_leads: [] },
+    transfer: { company_leads: [], my_leads: [] },
+    demo: { company_leads: [], my_leads: [] },
+    approved: { company_leads: [], my_leads: [] },
+    rejected: { company_leads: [], my_leads: [] },
   });
-const statusOptions = [
-  { id: "intersted", name: "Interested" },
-  { id: "negotiation", name: "Negotiation" },
-  { id: "demo_request", name: "Demo Request" },
-  { id: "demo_done", name: "Demo Done" },
-  { id: "reject", name: "Reject" },
-  { id: "approve", name: "Approve" },
-];
-const handleStatusChange = async (id, newStatus) => {
-  try {
-    const token = localStorage.getItem("token");
 
-    const response = await axios.put(
-      `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/${id}`,
-      { status: newStatus },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+  const statusOptions = [
+    // { id: "intersted", name: "Interested" },
+    { id: "negotiation", name: "Negotiation" },
+    { id: "demo_request", name: "Demo Request" },
+    { id: "demo_done", name: "Demo Done" },
+    { id: "reject", name: "Reject" },
+    { id: "approve", name: "Approve" },
+  ];
+
+  const handleStatusChange = async (id, newStatus, row) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `https://negotia.wegostation.com/api/sales/leads/${id}`,
+        { status: newStatus },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status !== 200) throw new Error("Failed to update status");
+
+      toast.success("Status updated ✅");
+      setEdit((per) => !per);
+
+      if (newStatus === "approve") {
+        setSelectedLead(row);
+        setOpenPayment(true);
       }
-    );
-
-    if (response.status !== 200) throw new Error("Failed to update status");
-
-    toast.success("Status updated ✅");
-
-   setEdit(per=>(!per))
-  } catch (err) {
-    console.error(err);
-    toast.error("Update failed ❌");
-  }
-};
-
-
-  const apiMap = {
-    default: "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads",
-    demo: "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/demoLead",
-    approve: "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/approveLead",
-    reject: "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/rejectLead",
-    transfer: "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/transferLead",
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed ❌");
+    }
   };
 
-  const [lastLoaded, setLastLoaded] = useState(null);
-
-  useEffect(() => {
-    setLastLoaded(null);
-  }, [mainTab]);
-
+  // ✅ API واحد بس
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setTabData((prev) => ({
-          ...prev,
-          [mainTab]: {
-            ...prev[mainTab],
-            [subTab]: [],
-          },
-        }));
-        
-        await get(apiMap[subTab], 2, 1000);
-                toast.success(`${subTab} leads loaded 🎉`);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "https://negotia.wegostation.com/api/sales/leads",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
+        if (response.status === 200) {
+          const data = response.data; // { default, demo, approved, rejected, transfer, active }
+          setTabData(data);
+          toast.success("Leads loaded 🎉");
+        }
       } catch (err) {
+        console.error(err);
         toast.error("Failed to load data ❌");
       }
     };
-    
     fetchData();
-  }, [subTab, mainTab, get,edit]); 
-
-  useEffect(() => {
-    if (status === 200 && data) {
-      const key = `${mainTab}_${subTab}`;
-      
-      const newData = mainTab === "company" 
-        ? data.company_leads || [] 
-        : data.my_leads || [];
-
-      if (newData.length > 0 || data) {
-
-        setTabData((prev) => ({
-          ...prev,
-          [mainTab]: {
-            ...prev[mainTab],
-            [subTab]: newData,
-          },
-        }));
-
-        setLastLoaded(key);
-      }
-    }
-  }, [status, data, subTab, mainTab]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-    }
-  }, [error]);
+  }, [edit]);
 
   const normalizeLead = (lead) => ({
     _id: lead._id,
     name: lead.name || "-",
     phone: lead.phone || "-",
+     country: lead.country ? lead.country.name : "-",   // ✅
+  city: lead.city ? lead.city.name : "-",        
     type: lead.type || "-",
-    address: lead.address || "-",
+    // address: lead.address || "-",
     status: lead.status || "-",
     activity_id: lead.activity_id ? lead.activity_id._id : null,
     activity: lead.activity_id ? lead.activity_id.name : "-",
@@ -146,7 +110,8 @@ const handleStatusChange = async (id, newStatus) => {
       : "-",
   });
 
-  const leads = tabData[mainTab]?.[subTab] || [];
+  // ✅ استخدم subTab + mainTab
+  const leads = tabData[subTab]?.[`${mainTab}_leads`] || [];
   const normalizedLeads = leads.map(normalizeLead);
 
   const filteredData = normalizedLeads.filter((item) => {
@@ -154,86 +119,88 @@ const handleStatusChange = async (id, newStatus) => {
     return (
       item.name.toLowerCase().includes(query) ||
       item.phone.toLowerCase().includes(query) ||
-      item.address.toLowerCase().includes(query)
+      item.city.toLowerCase().includes(query)||
+      item.country.toLowerCase().includes(query)||
+      item.activity.toLowerCase().includes(query) ||
+      item.source.toLowerCase().includes(query)||
+      item.status.toLowerCase().includes(query)
+
     );
   });
-
-  const navigate = useNavigate();
-const handlePayment = (row) => {
-    navigate("/seller/AddPaymentFromLead", { state: { row } });
-  };
-  const handleEdit = (row) => {
-    navigate("/seller/editlead", { state: row });
-  };
-
-  const handleMainTabChange = (tab) => {
-    if (tab !== mainTab) {
-      setMainTab(tab);
-      setLastLoaded(null); 
-    }
-  };
-
-  // ✅ تحسين subTab handler  
-  const handleSubTabChange = (tab) => {
-    if (tab !== subTab) {
-      setSubTab(tab);
-    }
-  };
 
   const baseColumns = [
     { key: "name", label: "Name" },
     { key: "phone", label: "Phone" },
-    { key: "address", label: "Address" },
-    { key: "status", label: "Status" },
+    // { key: "address", label: "Address" },
+      { key: "country", label: "Country", },
+      { key: "city", label: "City", },
+  {
+  key: "status",
+  label: "Status",
+  render: (status) => {
+    if (subTab === "demo") {
+      if (status === "demo_request") {
+        return (
+          <span className="px-3 py-1 rounded-full bg-yellow-600 text-white text-sm">
+            Demo Request
+          </span>
+        );
+      }
+      if (status === "demo_done") {
+        return (
+          <span className="px-3 py-1 rounded-full bg-green-600 text-white text-sm">
+            Demo Done
+          </span>
+        );
+      }
+    }
+
+    return (
+      <span className="px-4 py-3 text-gray-300 cursor-pointer">
+        {status}
+      </span>
+    );
+  },
+}
+,
     { key: "activity", label: "Activity" },
     { key: "source", label: "Source" },
+       {
+  key: "actions",
+  label: "Actions",
+  render: (_, row) => {
+    const availableOptions = statusOptions.filter(
+      (option) => option.id !== row.status   
+    );
+
+    return (
+      <div className="flex gap-3">
+        <select
+          defaultValue="" // 👈   فاضي
+          onChange={(e) => {
+            if (e.target.value) {
+              handleStatusChange(row._id, e.target.value, row);
+            }
+          }}
+          className="px-3 py-1 rounded bg-gray-700 text-white cursor-pointer"
+        >
+          <option value="" disabled>
+            Change status
+          </option>
+          {availableOptions.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  },
+}
+
   ];
 
-  const columns =
-    mainTab === "my"
-      ? [
-          ...baseColumns,
-          {
-            key: "actions",
-            label: "Actions",
-            render: (_, row) => (
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleEdit(row)}
-                  className="px-3 py-1 text-sm rounded bg-four text-white hover:bg-four/80"
-                >
-                  Edit
-                </button>
-                {subTab==="approve"&&(
-                   <button
-                  onClick={() => handlePayment(row._id)}
-                  className="px-3 py-1 text-sm rounded bg-four/50 text-white hover:bg-four/80"
-                >
-                  Payment
-                </button>
-                )
-                }
-             
-
-
-
-              <select
-              value={row.status}
-              onChange={(e) => handleStatusChange(row._id, e.target.value)}
-              className="px-2 py-1 rounded bg-gray-700 text-white"
-            >
-              {statusOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-              </div>
-            ),
-          },
-        ]
-      : baseColumns;
-
+ 
   return (
     <div className="p-6 text-white">
       {loading ? (
@@ -252,7 +219,7 @@ const handlePayment = (row) => {
             {["company", "my"].map((tab) => (
               <button
                 key={tab}
-                onClick={() => handleMainTabChange(tab)}
+                onClick={() => setMainTab(tab)}
                 className={`px-4 py-2 rounded-xl font-medium transition ${
                   mainTab === tab
                     ? "bg-four text-white"
@@ -266,25 +233,50 @@ const handlePayment = (row) => {
 
           {/* Sub Tabs */}
           <div className="flex justify-around gap-4 mb-4 flex-wrap">
-            {["default", "demo", "approve", "reject", "transfer"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => handleSubTabChange(tab)}
-                className={`px-4 py-2 rounded-xl font-medium transition ${
-                  subTab === tab
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-700 text-gray-300"
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
+            { [
+  { value: "default", label: "Default" },
+  { value: "active", label: "Negotiation" },
+  { value: "demo", label: "Demo" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+  { value: "transfer", label: "Transfer" },
+].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setSubTab(tab.value)}
+                  className={`px-4 py-2 rounded-xl font-medium transition ${
+                    subTab === tab.value
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-700 text-gray-300"
+                  }`}
+                >
+      {tab.label}
+                </button>
+              )
+            )}
           </div>
 
-      
-
-          <Table columns={columns} data={filteredData} pageSize={5} />
+          <Table columns={baseColumns} data={filteredData} pageSize={5} />
         </>
+      )}
+
+      {/* ✅ Popup */}
+      {openPayment && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-2xl relative">
+            <button
+              onClick={() => setOpenPayment(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-white"
+            >
+              ✕
+            </button>
+            <AddPaymentFromLead
+              lead={selectedLead}
+              onClose={() => setOpenPayment(false)}
+            />
+          </div>
+        </div>
       )}
 
       <ToastContainer position="top-right" autoClose={1500} />

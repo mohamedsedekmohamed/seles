@@ -11,7 +11,7 @@ const Lead = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads", 2, 1000); 
+    get("https://negotia.wegostation.com/api/leader/leads", 2, 1000); 
   }, [get]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Lead = () => {
 const changeSales = async (leadId, newSalesId) => {
   try {
     await axios.post(
-      `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads/transfer/${leadId}`,
+      `https://negotia.wegostation.com/api/leader/leads/transfer/${leadId}`,
       { salesId: newSalesId },
       {
         headers: {
@@ -40,7 +40,7 @@ const changeSales = async (leadId, newSalesId) => {
     );
 
     toast.success("✅ Sales changed successfully");
-    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads", 2, 1000); 
+    get("https://negotia.wegostation.com/api/leader/leads", 2, 1000); 
   } catch (error) {
     toast.error("❌ Failed to change sales");
   }
@@ -52,11 +52,6 @@ const changeSales = async (leadId, newSalesId) => {
       key: "sales_name",
       label: "Sales Name",
       render: (_, row) => row.sales_id?.name || "—",
-    },
-    {
-      key: "leader_name",
-      label: "Leader Name",
-      render: (_, row) => row.sales_id?.leader_id?.name || "—",
     },
     {
         key: "actions",

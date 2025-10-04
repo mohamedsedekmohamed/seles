@@ -29,7 +29,7 @@ const EditLead = () => {
 
   // جلب الأنشطة
   useEffect(() => {
-    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/admin/activities");
+    get("https://negotia.wegostation.com/api/admin/activities");
   }, [get]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const EditLead = () => {
     e.preventDefault();
     try {
       await put(
-        `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/${state._id}`,
+        `https://negotia.wegostation.com/api/sales/leads/${state._id}`,
         form
       );
       toast.success("Lead updated successfully 🎉");

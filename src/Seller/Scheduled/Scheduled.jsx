@@ -13,7 +13,7 @@ const Scheduled = () => {
 
   useEffect(() => {
     get(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/my-scheduled-contacts",
+      "https://negotia.wegostation.com/api/sales/my-scheduled-contacts",
       2,
       1000
     );
@@ -92,7 +92,7 @@ const handlePayment = (row) => {
     <div className="p-4 text-white">
       <Header
         nav="/seller/addscheduled"
-        title="Scheduled"
+        title="Follow Up"
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />

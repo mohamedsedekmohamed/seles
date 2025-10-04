@@ -13,7 +13,7 @@ const Company = () => {
 
   useEffect(() => {
     get(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads/company",
+      "https://negotia.wegostation.com/api/leader/leads/company",
       2,
       1000
     );
@@ -22,7 +22,7 @@ const Company = () => {
     const fetchSalesOptions = async () => {
       try {
         const res = await axios.get(
-          "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/all_my_sales",
+          "https://negotia.wegostation.com/api/leader/all_my_sales",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +57,7 @@ const Company = () => {
   const changeSales = async (leadId, newSalesId) => {
   try {
     await axios.post(
-      `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads/determine_sales/${leadId}`,
+      `https://negotia.wegostation.com/api/leader/leads/determine_sales/${leadId}`,
       { salesId: newSalesId },
       {
         headers: {
@@ -67,7 +67,7 @@ const Company = () => {
     );
 
     toast.success("✅ Sales changed successfully");
-    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader/leads/company", 2, 1000); 
+    get("https://negotia.wegostation.com/api/leader/leads/company", 2, 1000); 
   } catch (error) {
     toast.error("❌ Failed to change sales");
   }
@@ -87,22 +87,22 @@ const columns = [
     label: "Activity Name",
     render: (_, row) => row.activity_id?.name || "—",
   },
-  {
-    key: "activity_status",
-    label: "Activity Status",
-    render: (_, row) =>
-      row.activity_id?.status ? "✅ Active" : row.activity_id ? "❌ Inactive" : "—",
-  },
+  // {
+  //   key: "activity_status",
+  //   label: "Activity Status",
+  //   render: (_, row) =>
+  //     row.activity_id?.status ? "✅ Active" : row.activity_id ? "❌ Inactive" : "—",
+  // },
   {
     key: "source_name",
     label: "Source Name",
     render: (_, row) => row.source_id?.name || "—",
   },
-  {
-    key: "source_status",
-    label: "Source Status",
-    render: (_, row) => row.source_id?.status || "—",
-  },
+  // {
+  //   key: "source_status",
+  //   label: "Source Status",
+  //   render: (_, row) => row.source_id?.status || "—",
+  // },
   {
     key: "created_at",
     label: "Created At",
@@ -111,16 +111,16 @@ const columns = [
   },
   {
     key: "actions",
-    label: "Assign Sales",
+    label: "Transfer",
     render: (_, row) => (
       <select
         onChange={(e) => changeSales(row._id, e.target.value)}
         value={row.sales_id?._id || ""}
         className="px-3 py-1 bg-four text-white rounded border border-gray-600"
       >
-        <option value="">Select Sales</option>
+        <option  className="bg-gray-800" value="">Select Sales</option>
         {salesOptions?.map((sales) => (
-          <option key={sales._id} value={sales._id}>
+          <option className="bg-gray-800" key={sales._id} value={sales._id}>
             {sales.name}
           </option>
         ))}

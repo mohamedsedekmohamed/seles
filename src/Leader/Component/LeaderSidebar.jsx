@@ -47,25 +47,24 @@ const LeaderSidebar = ({ setIsOpen, isOpen }) => {
 
   return (
     <>
-      {/* Mobile Sidebar */}
-   <div className={`block md:hidden bg-one h-screen ${isOpen ? "absolute w-full" : ""} rounded-r-3xl top-0 z-50 transition-all duration-300`}>
-        <div
-          className={`flex items-center ${isOpen ? 'justify-start gap-4 px-4' : 'justify-center'} py-4 cursor-pointer`}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {/* لوجو */}
-          <div className='flex justify-center items-center z-100'>
-            {/* SVG */}
-        <SiGooglecampaignmanager360 className='h-8 w-8 text-four'/>
-          </div>
-          {isOpen && (
-            <>
-            <h1 className="text-two font-bold text-[14px] lg:text-[20px]">Negotia</h1>
-
-            </>
-
-          )}
-        </div>
+       <div className={`block md:hidden bg-one h-screen ${isOpen ? "absolute w-full" : ""} rounded-r-3xl top-0 z-50 transition-all duration-300`}>
+         <div
+           className={`flex items-center ${isOpen ? 'justify-start gap-4 px-4' : 'justify-center'} py-4 cursor-pointer`}
+           onClick={() => setIsOpen(!isOpen)}
+         >
+           {/* لوجو */}
+           <div className='flex justify-center items-center z-100'>
+             {/* SVG */}
+         <SiGooglecampaignmanager360 className='h-8 w-8 text-four'/>
+           </div>
+           {isOpen && (
+             <>
+             <h1 className="text-two font-bold text-[14px] lg:text-[20px]">Negotia</h1>
+ 
+             </>
+ 
+           )}
+         </div>
 
         <div className="border-1 border-gray-300 w-full px-3" />
 
@@ -105,10 +104,8 @@ const LeaderSidebar = ({ setIsOpen, isOpen }) => {
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className='flex justify-center items-center z-100'>
-            {/* Logo */}
-            <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* SVG content */}
-            </svg>
+                  <SiGooglecampaignmanager360 className='h-8 w-8 text-four'/>
+        
           </div>
           {isOpen && (
             <h1 className="text-two font-bold text-[14px] lg:text-[24px]">Negotia</h1>

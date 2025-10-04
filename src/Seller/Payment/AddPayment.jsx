@@ -16,6 +16,7 @@ const AddPayment = () => {
     offer_id: "",
     payment_method_id: "",
     amount: "",
+    proof_image:"",
   });
   const nav = useNavigate();
 
@@ -31,7 +32,7 @@ const [leads, setLeads] = useState([]);
   const [payment, setPayment] = useState([]);
  useEffect(() => {
     get(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/payments/payment"
+      "https://negotia.wegostation.com/api/sales/payments/payment"
     );
   }, [get]);
   
@@ -88,9 +89,13 @@ if (!form.amount) {
   toast.error("amount is required ❌");
   return;
 }
+if (!form.proof_image) {
+  toast.error("Image is required ❌");
+  return;
+}
 
     const res = await post(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/payments/payment",
+      "https://negotia.wegostation.com/api/sales/payments/payment",
       form
     );
 
@@ -102,6 +107,7 @@ if (!form.amount) {
         product_id: "",
         payment_method_id: "",
         amount: "",
+        proof_image:""
       });
       nav("/seller/payment")
     } else {
@@ -157,7 +163,17 @@ if (!form.amount) {
           value={form.amount}
           onChange={(e) => handleChange("amount", e.target.value)}
         />
-
+        <div>
+<label className="mb-2 block">Upload Proof Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => handleChange("proof_image", e.target.value)}
+        className="file:mr-4 file:rounded-lg file:border-1 file:border-four  file:px-4 file:py-2 
+             file:text-white file:cursor-pointer file:hover:bg-four 
+             text-sm text-gray-600"
+        />
+        </div>
         <button
           type="submit"
           disabled={loading}

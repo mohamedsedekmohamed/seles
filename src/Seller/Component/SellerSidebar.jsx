@@ -42,7 +42,7 @@ const links = [
   },
   {
     to: "scheduled",
-    name: "Scheduled",
+    name: "Follow up",
     icon: <IconScheduled />,
     iconActive: <IconScheduled active />
   },

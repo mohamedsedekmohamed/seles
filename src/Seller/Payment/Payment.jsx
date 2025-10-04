@@ -11,10 +11,11 @@ const Payment = () => {
   const { data, loading, error, status, get } = useGet();
   const [activeTab, setActiveTab] = useState("pending");
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     get(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/payments/payment",
+      "https://negotia.wegostation.com/api/sales/payments/payment",
       2,
       1000
     );
@@ -68,9 +69,8 @@ const Payment = () => {
     {
       key: "proof_image",
       label: "Image",
-      render: (value) =>
-       <img src={value} className="w-5 h-5"/>
-    },
+   render: (value) => <ImagePreview src={value} />,
+   },
     {
       key: "sale_date",
       label: "Sale Date",
@@ -78,6 +78,9 @@ const Payment = () => {
     },
   ];
 
+
+
+  
   return (
     <div className="p-6 text-white">
     
@@ -90,7 +93,7 @@ const Payment = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-         <div className="flex justify-around gap-4 mb-4">
+         <div className="flex justify-around gap-4 mb-4 flex-wrap ">
         {["pending", "approve", "reject"].map((tab) => (
           <button
             key={tab}
@@ -120,3 +123,40 @@ const Payment = () => {
 };
 
 export default Payment;
+
+const ImagePreview = ({ src }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* الصورة الصغيرة داخل الجدول */}
+      <img
+        src={src}
+        alt="proof"
+        className="w-20 h-20 object-cover cursor-pointer rounded"
+        onClick={() => setOpen(true)}
+      />
+
+      {/* Popup يكبر الصورة */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          onClick={() => setOpen(false)} // يقفل لما تدوس برا
+        >
+          <img
+            src={src}
+            alt="proof large"
+            className="max-w-[90%] max-h-[90%] rounded shadow-lg"
+          />
+          <button
+            className="absolute top-4 right-4 text-white text-3xl font-bold"
+            onClick={() => setOpen(false)}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+

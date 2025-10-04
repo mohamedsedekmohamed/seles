@@ -27,7 +27,7 @@ const OverView = () => {
 
   const fetchData = () => {
     get(
-      `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/leader?month=${month}&year=${year}`,
+      `https://negotia.wegostation.com/api/leader?month=${month}&year=${year}`,
       2,
       1000
     );
@@ -70,7 +70,7 @@ const Refresh=()=>{
     <div className="min-h-screen bg-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-wrap gap-3 items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <FiBarChart className="w-8 h-8 text-green-600" />
@@ -79,7 +79,7 @@ const Refresh=()=>{
             <p className="text-gray-600">Track team target & performance</p>
           </div>
 
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-3  flex-wrap">
             <select
               value={month}
               onChange={(e) => setMonth(Number(e.target.value))}

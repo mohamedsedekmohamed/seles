@@ -31,11 +31,11 @@ const EditScheduled = () => {
   useEffect(() => {
     console.log(state.row._id)
    if (state.row._id) {
-  get(`https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/schedule-contact/${state.row._id}`);
+  get(`https://negotia.wegostation.com/api/sales/schedule-contact/${state.row._id}`);
 }
 
     getOptions(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/my-scheduled-contacts"
+      "https://negotia.wegostation.com/api/sales/my-scheduled-contacts"
     );
   }, [state, get, getOptions]);
 
@@ -82,7 +82,7 @@ const EditScheduled = () => {
 
     try {
      const res = await put(
-  `https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/schedule-contact/${state.row._id}`,
+  `https://negotia.wegostation.com/api/sales/schedule-contact/${state.row._id}`,
   form
 );
 

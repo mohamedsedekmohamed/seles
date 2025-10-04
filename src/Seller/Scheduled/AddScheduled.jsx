@@ -30,7 +30,7 @@ const AddScheduled = () => {
 
   useEffect(() => {
     get(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/my-scheduled-contacts"
+      "https://negotia.wegostation.com/api/sales/my-scheduled-contacts"
     );
   }, [get]);
 
@@ -76,7 +76,7 @@ if (!form.contact_time) {
 
   try {
     const res = await post(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/schedule-contact",
+      "https://negotia.wegostation.com/api/sales/schedule-contact",
       form
     );
 

@@ -18,6 +18,7 @@ const Table = ({ columns, data, charLimit = 30, pageSize = 10 }) => {
       <table className="min-w-full divide-y divide-gray-700 text-sm text-left">
         <thead className="bg-gray-800">
           <tr>
+            <th className="px-4 py-3 font-semibold text-gray-200">#</th>
             {columns.map((col) => (
               <th
                 key={col.key}
@@ -28,40 +29,46 @@ const Table = ({ columns, data, charLimit = 30, pageSize = 10 }) => {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-700 bg-gray-900">
-          {currentData.length > 0 ? (
-            currentData.map((row, idx) => (
-              <tr key={row._id || idx} className="hover:bg-gray-800">
-                {columns.map((col) => {
-                  const value = String(row[col.key] || "");
-                  const isTruncated = value.length > charLimit;
-                  return (
-                    <td
-                      key={col.key}
-                      className="px-4 py-3 text-gray-300 cursor-pointer"
-                      onClick={() =>
-                        isTruncated ? setPopupContent(value) : null
-                      }
-                    >
-                      {col.render
-                        ? col.render(row[col.key], row)
-                        : truncateText(value)}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan={columns.length}
-                className="px-4 py-6 text-center text-gray-500"
-              >
-                No data available
-              </td>
-            </tr>
-          )}
-        </tbody>
+   <tbody className="divide-y divide-gray-700 bg-gray-900">
+  {currentData.length > 0 ? (
+    currentData.map((row, idx) => (
+      <tr key={row._id || idx} className="hover:bg-gray-800">
+        <td className="px-4 py-3 text-gray-400 font-medium">
+          {idx + 1}
+        </td>
+
+        {/* باقي الأعمدة */}
+        {columns.map((col) => {
+          const value = String(row[col.key] || "");
+          const isTruncated = value.length > charLimit;
+          return (
+            <td
+              key={col.key}
+              className="px-4 py-3 text-gray-300 cursor-pointer"
+              onClick={() =>
+                isTruncated ? setPopupContent(value) : null
+              }
+            >
+              {col.render
+                ? col.render(row[col.key], row)
+                : truncateText(value)}
+            </td>
+          );
+        })}
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td
+        colSpan={columns.length + 1} // +1 علشان عمود الـ index الجديد
+        className="px-4 py-6 text-center text-gray-500"
+      >
+        No data available
+      </td>
+    </tr>
+  )}
+</tbody>
+
       </table>
 
    <div className="sticky bottom-0 left-0 w-full bg-gray-800 p-4">

@@ -16,10 +16,10 @@ const Login = ({ setRole }) => {
 
   try {
     const res = await axios.post(
-      "https://qpjgfr5x-3000.uks1.devtunnels.ms/api/auth/login",
+      "https://negotia.wegostation.com/api/auth/login",
       { email, password }
     );
-
+    
     const { token, role, name, email: userEmail } = res.data.data; 
 
   localStorage.setItem("token", token);

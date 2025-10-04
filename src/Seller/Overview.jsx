@@ -55,7 +55,7 @@ const Overview = () => {
   const { data, loading, error, status, get } = useGet();
 
   useEffect(() => {
-    get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/home", 2, 1000);
+    get("https://negotia.wegostation.com/api/sales/leads/home", 2, 1000);
   }, [get]);
 
   useEffect(() => {
@@ -292,7 +292,7 @@ const Overview = () => {
         <div className="mt-8 text-center">
           <button
             onClick={() =>
-              get("https://qpjgfr5x-3000.uks1.devtunnels.ms/api/sales/leads/home", 2, 1000)
+              get("https://negotia.wegostation.com/api/sales/leads/home", 2, 1000)
             }
             className="bg-four text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 mx-auto"
             disabled={loading}
