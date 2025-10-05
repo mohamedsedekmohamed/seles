@@ -6,7 +6,7 @@ import { toast ,ToastContainer} from "react-toastify";
 import Header from "../../Ui/Header";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-const Lead = () => {
+const Leads = () => {
  const { data, loading, error, status, get } = useGet();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -104,4 +104,4 @@ const filteredProducts = leadss.filter((p) => {
     </div>
   );
 };
-export default Lead
+export default Leads

@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Overview from "../Seller/Overview";
 import SellerLayout from "../Layout/SellerLayout";
-import Lead from "../Seller/Lead/Leads";
+import Leads from "../Seller/Lead/Leads";
 import Product from "../Seller/Product/Product";
 import Offer from "../Seller/Offer/Offer";
 import Commission from '../Seller/Commission/Commission'
@@ -18,7 +18,7 @@ const SellerApp = ({ setRole }) => {
     <Routes>
       <Route path="/seller" element={<SellerLayout setRole={setRole} />}>
         <Route path="overview" element={<Overview />} />
-        <Route path="lead" element={<Lead />} />
+        <Route path="lead" element={<Leads />} />
         <Route path="addlead" element={<Addlead />} />
         <Route path="editlead" element={<EditLead />} />
         <Route path="product" element={<Product />} />
