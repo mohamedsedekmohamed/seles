@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Overview from "../Seller/Overview";
 import SellerLayout from "../Layout/SellerLayout";
-import Lead from "../Seller/lead/lead";
+import Lead from "../Seller/Lead/Lead";
 import Product from "../Seller/Product/Product";
 import Offer from "../Seller/Offer/Offer";
 import Commission from '../Seller/Commission/Commission'
