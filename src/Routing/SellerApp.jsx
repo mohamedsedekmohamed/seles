@@ -11,7 +11,7 @@ import Payment from '../Seller/Payment/Payment'
 import AddPaymentFromLead from "../Seller/Payment/AddPaymentFromLead";
 import EditScheduled from "../Seller/Scheduled/EditScheduled";
 import Leads from "../Seller/Lead/Leads";
-import EditLead from "../Seller/Lead/EditLead";
+// import EditLead from "../Seller/Lead/EditLead";
 import Addlead from "../Seller/Lead/Addlead";
 const SellerApp = ({ setRole }) => {
   return (
@@ -20,7 +20,7 @@ const SellerApp = ({ setRole }) => {
         <Route path="overview" element={<Overview />} />
         <Route path="lead" element={<Leads />} />
         <Route path="addlead" element={<Addlead />} />
-        <Route path="editlead" element={<EditLead />} />
+        {/* <Route path="editlead" element={<EditLead />} /> */}
         <Route path="product" element={<Product />} />
         <Route path="offer" element={<Offer />} />
         <Route path="commission" element={<Commission />} />
