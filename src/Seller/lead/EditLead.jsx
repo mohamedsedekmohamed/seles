@@ -22,7 +22,7 @@ const EditLead = () => {
   });
 
   // Hooks
-  const { data: optionsData, loading: loadingOptions, get } = useGet();
+  const { data: optionsData , get } = useGet();
   const { loading: saving, put } = usePut();
 
   const [activity, setActivity] = useState([]);
@@ -56,9 +56,9 @@ const EditLead = () => {
         form
       );
       toast.success("Lead updated successfully 🎉");
-     nav("/seller/lead")
+      nav("/seller/lead");
     } catch (err) {
-      toast.error("Update failed ❌");
+      toast.error("Update failed ❌",err);
     }
   };
 
@@ -71,48 +71,48 @@ const EditLead = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-        className="flex flex-col gap-6 mt-6 max-w-xl"
-            >
+          className="flex flex-col gap-6 mt-6 max-w-xl"
+        >
           <InputField
-   placeholder="Name"
-          name="name"
-                      value={form.name}
+            placeholder="Name"
+            name="name"
+            value={form.name}
             onChange={(e) => handleChange("name", e.target.value)}
           />
 
           <InputField
-          placeholder="Phone"
-          name="phone"
-                      value={form.phone}
+            placeholder="Phone"
+            name="phone"
+            value={form.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
           />
 
           <InputField
-  placeholder="Address"
-          name="address"
-          value={form.address}
+            placeholder="Address"
+            name="address"
+            value={form.address}
             onChange={(e) => handleChange("address", e.target.value)}
           />
           <InputArrow
-     placeholder="Activity"
-          name="activity_id"
-             value={form.activity_id}
+            placeholder="Activity"
+            name="activity_id"
+            value={form.activity_id}
             options={activity.map((a) => ({ id: a.id, name: a.name }))}
             onChange={(value) => handleChange("activity_id", value)}
           />
-       <InputArrow
-       placeholder="Status"
-  value={form.status}
-  options={[
-    { id: "intersted", name: "Interested" },
-    { id: "negotiation", name: "Negotiation" },
-    { id: "demo_request", name: "Demo Request" },
-    { id: "demo_done", name: "Demo Done" },
-    { id: "reject", name: "Reject" },
-    { id: "approve", name: "Approve" },
-  ]}
-  onChange={(value) => handleChange("status", value)}
-/>
+          <InputArrow
+            placeholder="Status"
+            value={form.status}
+            options={[
+              { id: "intersted", name: "Interested" },
+              { id: "negotiation", name: "Negotiation" },
+              { id: "demo_request", name: "Demo Request" },
+              { id: "demo_done", name: "Demo Done" },
+              { id: "reject", name: "Reject" },
+              { id: "approve", name: "Approve" },
+            ]}
+            onChange={(value) => handleChange("status", value)}
+          />
 
           <button
             type="submit"

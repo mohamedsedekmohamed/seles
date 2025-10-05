@@ -42,7 +42,7 @@ const changeSales = async (leadId, newSalesId) => {
     toast.success("✅ Sales changed successfully");
     get("https://negotia.wegostation.com/api/leader/leads", 2, 1000); 
   } catch (error) {
-    toast.error("❌ Failed to change sales");
+    toast.error("❌ Failed to change sales",error);
   }
 };
 
