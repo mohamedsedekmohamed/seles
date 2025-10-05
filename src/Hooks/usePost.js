@@ -33,20 +33,30 @@ function usePost() {
             status: res.status,
           });
 
-          return res.data; 
+          return res.data; // ✅ نرجّع الداتا اللي جاية من السيرفر
         } catch (err) {
           if (attempt < retries) {
             await delay(retryDelay);
             continue;
           }
 
+          // ✅ استخراج الرسالة بدقة مهما كان شكل الـ error
+          const errorData = err.response?.data;
+          const extractedMessage =
+            errorData?.error?.message?.message || // مثال: error.error.message.message
+            errorData?.error?.message ||          // مثال: error.error.message
+            errorData?.message ||                 // مثال: error.message
+            err.message ||                        // axios message
+            "Unknown error occurred";             // fallback
+
           setResponse({
             data: null,
             loading: false,
-            error:
-              err.response?.data?.message || err.message || "Unknown error",
+            error: extractedMessage,
             status: err.response?.status || null,
           });
+
+          return { success: false, error: extractedMessage };
         }
       }
     },

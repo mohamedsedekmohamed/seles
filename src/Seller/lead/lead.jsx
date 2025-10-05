@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import useGet from "../../Hooks/useGet";
 import axios from "axios";
 import AddPaymentFromLead from "../Payment/AddPaymentFromLead";
-
+import { useNavigate } from "react-router-dom";
 const Leads = () => {
   const { loading } = useGet(); // مش هنستخدم get هنا خلاص
   const [edit, setEdit] = useState(false);
@@ -17,9 +17,10 @@ const Leads = () => {
 
   const [openPayment, setOpenPayment] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
-
+const navigate = useNavigate();
   const [tabData, setTabData] = useState({
     default: { company_leads: [], my_leads: [] },
+    intersted: { company_leads: [], my_leads: [] },
     active: { company_leads: [], my_leads: [] },
     transfer: { company_leads: [], my_leads: [] },
     demo: { company_leads: [], my_leads: [] },
@@ -28,7 +29,7 @@ const Leads = () => {
   });
 
   const statusOptions = [
-    // { id: "intersted", name: "Interested" },
+    { id: "intersted", name: "Interested" },
     { id: "negotiation", name: "Negotiation" },
     { id: "demo_request", name: "Demo Request" },
     { id: "demo_done", name: "Demo Done" },
@@ -131,9 +132,18 @@ const Leads = () => {
   const baseColumns = [
     { key: "name", label: "Name" },
     { key: "phone", label: "Phone" },
-    // { key: "address", label: "Address" },
-      { key: "country", label: "Country", },
-      { key: "city", label: "City", },
+{
+  key: "address",
+  label: "Address",
+  render: (_, row) => (
+    <span className="text-gray-200">
+      {row.city && row.country
+        ? `${row.city}, ${row.country}`
+        : row.city || row.country || "-"}
+    </span>
+  ),
+},
+
   {
   key: "status",
   label: "Status",
@@ -165,7 +175,19 @@ const Leads = () => {
 ,
     { key: "activity", label: "Activity" },
     { key: "source", label: "Source" },
-       {
+   {
+    key: "follow_up",
+    label: "Follow Up",
+    render: (_, row) => (
+      <button
+        onClick={() => navigate("/seller/addscheduled", { state: row })}
+        className="px-4 py-2 bg-four hover:bg-four/70 text-white rounded-lg transition-all"
+      >
+        Follow Ups
+      </button>
+    ),
+  },
+    {
   key: "actions",
   label: "Actions",
   render: (_, row) => {
@@ -231,31 +253,43 @@ const Leads = () => {
             ))}
           </div>
 
-          {/* Sub Tabs */}
-          <div className="flex justify-around gap-4 mb-4 flex-wrap">
-            { [
-  { value: "default", label: "Default" },
-  { value: "active", label: "Negotiation" },
-  { value: "demo", label: "Demo" },
-  { value: "approved", label: "Approved" },
-  { value: "rejected", label: "Rejected" },
-  { value: "transfer", label: "Transfer" },
-].map(
-              (tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setSubTab(tab.value)}
-                  className={`px-4 py-2 rounded-xl font-medium transition ${
-                    subTab === tab.value
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-700 text-gray-300"
-                  }`}
-                >
-      {tab.label}
-                </button>
-              )
-            )}
-          </div>
+<div className="flex justify-around gap-4 mb-4 flex-wrap">
+  {[
+    { value: "default", label: "Default" },
+    { value: "intersted", label: "Intersted" },
+    { value: "negotiation", label: "Negotiation" },
+    { value: "demo", label: "Demo" },
+    { value: "approved", label: "Approved" },
+    { value: "rejected", label: "Rejected" },
+    { value: "transfer", label: "Transfer" },
+  ].map((tab) => {
+    const count =
+      tabData[tab.value]?.[`${mainTab}_leads`]?.length || 0;
+
+    return (
+      <button
+        key={tab.value}
+        onClick={() => setSubTab(tab.value)}
+        className={`px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition ${
+          subTab === tab.value
+            ? "bg-green-600 text-white"
+            : "bg-gray-700 text-gray-300"
+        }`}
+      >
+        <span>{tab.label}</span>
+        <span
+          className={`text-sm px-2 py-0.5 rounded-full ${
+            subTab === tab.value ? "bg-white text-green-600" : "bg-gray-500 text-white"
+          }`}
+        >
+          {count}
+        </span>
+      </button>
+    );
+  })}
+</div>
+
+
 
           <Table columns={baseColumns} data={filteredData} pageSize={5} />
         </>

@@ -15,8 +15,8 @@ const Header = ({
   const navigate = useNavigate();
 
   return (
-    <div className="my-2 px-1 md:px-6">
-      <span className="py-10 md:py-15 font-bold text-[20px] md:text-[28px] text-white">
+    <div className="my-5  px-1  ">
+      <span className="py-10 md:py-15 font-bold text-[20px] md:text-[28px] text-white ">
         {title}
       </span>
       <div
@@ -25,7 +25,7 @@ const Header = ({
         } items-center gap-3`}
       >
         {!stopsearch && (
-          <div className="relative items-center w-1/2">
+          <div className="relative mt-4 items-center w-1/2">
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}

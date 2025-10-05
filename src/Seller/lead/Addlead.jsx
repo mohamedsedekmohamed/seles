@@ -113,25 +113,30 @@ const Addlead = () => {
       return;
     }
 
-    const res = await post(
-      "https://negotia.wegostation.com/api/sales/leads",
-      form
-    );
+  const res = await post(
+  "https://negotia.wegostation.com/api/sales/leads",
+  form
+);
 
-    if (res) {
-      toast.success("Lead added successfully 🎉");
-      setForm({
-        name: "",
-        phone: "",
-        country: "",
-        city: "",
-        source_name: "",
-        activity_id: "",
-      });
-      nav("/seller/lead");
-    } else {
-      toast.error(error, " ❌");
-    }
+if (res?.success) {
+  toast.success("Lead added successfully 🎉");
+  setForm({
+    name: "",
+    phone: "",
+    country: "",
+    city: "",
+    source_name: "",
+    activity_id: "",
+  });
+  nav("/seller/lead");
+} else {
+  const errorMessage =
+    res?.error?.message?.message || // لو جاية متداخلة
+    res?.error ||                   // لو جاية مباشرة من hook
+    "Something went wrong ❌";       // fallback
+  toast.error(errorMessage);
+}
+
   };
 
   // ⬇️ Cities filtered by selected country

@@ -15,21 +15,18 @@ const EditScheduled = () => {
 
   const [form, setForm] = useState({
     lead_id: "",
-    sales_id: "",
     contact_date: "",
     contact_time: "",
     notes: "",
   });
 
   const [leads, setLeads] = useState([]);
-  const [sales, setSales] = useState([]);
 
   const { data: details, loading: loadingDetails, get } = useGet();
   const { data: updateData, loading: updating, put } = usePut();
   const { data: optionsData, loading: loadingOptions, get: getOptions } = useGet();
 
   useEffect(() => {
-    console.log(state.row._id)
    if (state.row._id) {
   get(`https://negotia.wegostation.com/api/sales/schedule-contact/${state.row._id}`);
 }
@@ -45,7 +42,6 @@ const EditScheduled = () => {
       const d = details.data.data;
       setForm({
         lead_id: d.lead_id?._id || "",
-        sales_id: d.sales_id?._id || "",
         contact_date: d.contact_date
           ? new Date(d.contact_date).toISOString().split("T")[0]
           : "",
@@ -61,9 +57,7 @@ const EditScheduled = () => {
       setLeads(
         optionsData.data.leadOptions?.map((l) => ({ id: l._id, name: l.name })) || []
       );
-      setSales(
-        optionsData.data.salesOptions?.map((s) => ({ id: s._id, name: s.name })) || []
-      );
+     
     }
   }, [optionsData]);
 
@@ -75,7 +69,6 @@ const EditScheduled = () => {
     e.preventDefault();
 
     if (!form.lead_id) return toast.error("Please select a lead ❌");
-    if (!form.sales_id) return toast.error("Please select a sales person ❌");
     if (!form.contact_date) return toast.error("Please choose a contact date ❌");
     if (!form.contact_time) return toast.error("Please choose a contact time ❌");
     if (!form.notes) return toast.error("Please enter your notes ❌");
@@ -117,14 +110,7 @@ const EditScheduled = () => {
             onChange={(val) => handleChange("lead_id", val)}
             options={leads}
           />
-
-          <InputArrow
-            placeholder="Sales"
-            name="sales_id"
-            value={form.sales_id}
-            onChange={(val) => handleChange("sales_id", val)}
-            options={sales}
-          />
+     
 
           <InputField
             placeholder="Contact Date"

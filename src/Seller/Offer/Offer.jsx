@@ -66,7 +66,7 @@ const Offer = () => {
     },
     {
       key: "product",
-      label: "Product",
+      label: "Subscription",
       render: (_, row) => (
         <div>
           <p className="font-semibold">{row.product_name}</p>

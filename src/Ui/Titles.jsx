@@ -11,10 +11,10 @@ const Titles = ({ title }) => {
   };
 
   return (
-    <div className="flex items-center gap-4 p-4">
+    <div className="flex items-center gap-4 py-4">
       <button 
         onClick={handleGoBack}
-        className="p-2 text-white rounded-full hover:bg-gray-700 focus:outline-none"
+        className="pr-2 text-white rounded-full hover:bg-gray-700 focus:outline-none"
       >
         <IoMdArrowBack size={24} />
       </button>

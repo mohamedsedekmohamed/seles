@@ -4,34 +4,30 @@ import InputField from "../../Ui/InputField";
 import InputArrow from "../../Ui/InputArrow";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Loading from "../../Ui/Loading";
 
 import useGet from "../../Hooks/useGet";
 import usePost from "../../Hooks/usePost";
 
 const AddScheduled = () => {
+  const nav = useNavigate();
+  const { state } = useLocation(); // ✅ نستقبل البيانات من navigate
+  const isFromOtherPage = !!state; // لو فيه state معناها جاي من صفحة تانية
+
   const [form, setForm] = useState({
-    lead_id: "",
-    sales_id: "",
+    lead_id: state?._id || "",
     contact_date: "",
-      contact_time: "", 
+    contact_time: "",
     notes: "",
   });
-  const nav = useNavigate();
 
-  const { data: optionsData, loading: loadingOptions, error: errorOptions, get } =
-    useGet();
-
-  const { data, loading, error, post } = usePost();
-
+  const { data: optionsData, loading: loadingOptions, get } = useGet();
+  const { data, loading, post } = usePost();
   const [leads, setLeads] = useState([]);
-  const [sales, setSales] = useState([]);
 
   useEffect(() => {
-    get(
-      "https://negotia.wegostation.com/api/sales/my-scheduled-contacts"
-    );
+    get("https://negotia.wegostation.com/api/sales/my-scheduled-contacts");
   }, [get]);
 
   useEffect(() => {
@@ -40,126 +36,107 @@ const AddScheduled = () => {
         optionsData.data.leadOptions?.map((l) => ({ id: l._id, name: l.name })) ||
           []
       );
-      setSales(
-        optionsData.data.salesOptions?.map((s) => ({ id: s._id, name: s.name })) ||
-          []
-      );
     }
   }, [optionsData]);
 
   const handleChange = (name, value) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  if (!form.lead_id) {
-  toast.error("Please select a lead ❌");
-  return;
-}
-if (!form.sales_id) {
-  toast.error("Please select a sales person ❌");
-  return;
-}
-if (!form.contact_date) {
-  toast.error("Please choose a contact date ❌");
-  return;
-}
-if (!form.notes) {
-  toast.error("Please enter your notes ❌");
-  return;
-}
-if (!form.contact_time) {
-  toast.error("Please choose a contact time ❌");
-  return;
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await post(
-      "https://negotia.wegostation.com/api/sales/schedule-contact",
-      form
-    );
+    if (!form.lead_id) return toast.error("Please select a lead ❌");
+    if (!form.contact_date) return toast.error("Please choose a contact date ❌");
+    if (!form.contact_time) return toast.error("Please choose a contact time ❌");
+    if (!form.notes) return toast.error("Please enter your notes ❌");
 
-    if (res.success) {
-      toast.success("Scheduled contact added successfully 🎉");
-  setForm({
-  lead_id: "",
-  sales_id: "",
-  contact_date: "",
-  contact_time: "",  
-  notes: "",
-});
+    try {
+      const res = await post(
+        "https://negotia.wegostation.com/api/sales/schedule-contact",
+        form
+      );
 
-      nav("/seller/scheduled");
-    } else {
-      toast.error(res.error?.message || "Failed to add scheduled contact ❌");
+      if (res.success) {
+        toast.success("Scheduled contact added successfully 🎉");
+        setForm({
+          lead_id: "",
+          contact_date: "",
+          contact_time: "",
+          notes: "",
+        });
+        nav("/seller/scheduled");
+      } else {
+        toast.error(res.error?.message || "Failed to add scheduled contact ❌");
+      }
+    } catch (error) {
+      toast.error(error?.error?.details?.message || "Something went wrong ❌");
     }
-  } catch (error) {
-    toast.error(error?.error.details.mmessage  || "Something went wrong ❌");
-  }
-};
-
+  };
 
   return (
     <div className="p-6 text-white">
-      <Titles title="Add Scheduled Contact" nav={"/seller/addscheduled"} />
+      <Titles title="Add Scheduled Contact" nav={"/seller/scheduled"} />
 
-      {loadingOptions ? (        <Loading rows={5} cols={6} />
-):(  <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-6 mt-6 max-w-xl"
-      >
-        <InputArrow
-          placeholder="Lead"
-          name="lead_id"
-          value={form.lead_id}
-          onChange={(val) => handleChange("lead_id", val)}
-          options={leads}
-        />
-
-        <InputArrow
-          placeholder="Sales"
-          name="sales_id"
-          value={form.sales_id}
-          onChange={(val) => handleChange("sales_id", val)}
-          options={sales}
-        />
-
-        <InputField
-          placeholder="Contact Date"
-          name="contact_date"
-          type="date"
-          value={form.contact_date}
-          onChange={(e) => handleChange("contact_date", e.target.value)}
-        />
-<InputField
-  placeholder="Contact Time"
-  name="contact_time"
-  type="time"   
-  value={form.contact_time}
-  onChange={(e) => handleChange("contact_time", e.target.value)}
-/>
-
-        <InputField
-          placeholder="Notes"
-          name="notes"
-          type="text"
-          value={form.notes}
-          onChange={(e) => handleChange("notes", e.target.value)}
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-four hover:bg-four/75 disabled:opacity-50 transition px-6 py-3 rounded-xl font-medium"
+      {loadingOptions ? (
+        <Loading rows={5} cols={6} />
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6 mt-6 max-w-xl"
         >
-          {loading ? "Saving..." : "Save Scheduled Contact"}
-        </button>
-      </form>
+          {/* ✅ عرض Lead بشكل مختلف حسب الحالة */}
+          {isFromOtherPage ? (
+            <InputField
+              placeholder="Lead"
+              name="lead_name"
+              value={form.lead_name}
+              disabled
+            />
+          ) : (
+            <InputArrow
+              placeholder="Lead"
+              name="lead_id"
+              value={form.lead_id}
+              onChange={(val) => handleChange("lead_id", val)}
+              options={leads}
+            />
+          )}
 
-)}
+          <InputField
+            placeholder="Contact Date"
+            name="contact_date"
+            type="date"
+            value={form.contact_date}
+            onChange={(e) => handleChange("contact_date", e.target.value)}
+          />
 
-    
+          <InputField
+            placeholder="Contact Time"
+            name="contact_time"
+            type="time"
+            value={form.contact_time}
+            onChange={(e) => handleChange("contact_time", e.target.value)}
+          />
+
+          <InputField
+            placeholder="Notes"
+            name="notes"
+            type="text"
+            value={form.notes}
+            onChange={(e) => handleChange("notes", e.target.value)}
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-four hover:bg-four/75 disabled:opacity-50 transition px-6 py-3 rounded-xl font-medium"
+          >
+            {loading ? "Saving..." : "Save Scheduled Contact"}
+          </button>
+        </form>
+      )}
+
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
