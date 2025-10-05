@@ -4,7 +4,7 @@ import SellerLayout from "../Layout/SellerLayout";
 import Product from "../Seller/Product/Product";
 import Offer from "../Seller/Offer/Offer";
 import Commission from '../Seller/Commission/Commission'
-import Scheduled from '../Seller/Scheduled/scheduled'
+import Scheduled from '../Seller/Scheduled/Scheduled'
 import AddScheduled from '../Seller/Scheduled/AddScheduled'
 import AddPayment from '../Seller/Payment/AddPayment'
 import Payment from '../Seller/Payment/Payment'
