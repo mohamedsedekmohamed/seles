@@ -9,10 +9,10 @@ import AddScheduled from '../Seller/Scheduled/AddScheduled'
 import AddPayment from '../Seller/Payment/AddPayment'
 import Payment from '../Seller/Payment/Payment'
 import Addlead from "../Seller/Lead/Addlead";
-import EditLead from "../Seller/Lead/EditLead";
 import AddPaymentFromLead from "../Seller/Payment/AddPaymentFromLead";
 import EditScheduled from "../Seller/Scheduled/EditScheduled";
 import Leads from "../Seller/Lead/Leads";
+import EditLead from "../Seller/Lead/EditLead";
 const SellerApp = ({ setRole }) => {
   return (
     <Routes>
