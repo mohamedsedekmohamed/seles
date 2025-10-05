@@ -9,7 +9,7 @@ import axios from "axios";
 import AddPaymentFromLead from "../Payment/AddPaymentFromLead";
 import { useNavigate } from "react-router-dom";
 const Leads = () => {
-  const { loading } = useGet(); // مش هنستخدم get هنا خلاص
+  const { loading } = useGet();
   const [edit, setEdit] = useState(false);
   const [mainTab, setMainTab] = useState("company");
   const [subTab, setSubTab] = useState("default");

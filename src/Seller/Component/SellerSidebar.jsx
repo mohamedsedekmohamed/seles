@@ -17,7 +17,7 @@ const links = [
     iconActive: <IconOverview active />
   },
   {
-    to: "lead",
+    to: "leads",
     name: "Lead",
     icon: <IconLeads />,
     iconActive: <IconLeads active />
@@ -64,8 +64,8 @@ const SellerSidebar = ({ setIsOpen, isOpen }) => {
       '/seller/EditScheduled': '/seller/scheduled',
       '/seller/addpayment': '/seller/payment',
       '/seller/AddPaymentFromLead': '/seller/payment',
-      '/seller/addlead': '/seller/lead',
-      '/seller/editlead': '/seller/lead',
+      '/seller/addlead': '/seller/leads',
+      '/seller/editlead': '/seller/leads',
     };
 
     const newPath = customPaths[location.pathname] || location.pathname;

@@ -10,16 +10,22 @@ import AddPayment from '../Seller/Payment/AddPayment'
 import Payment from '../Seller/Payment/Payment'
 import AddPaymentFromLead from "../Seller/Payment/AddPaymentFromLead";
 import EditScheduled from "../Seller/Scheduled/EditScheduled";
-import Leads from "../Seller/Lead/Leads";
+import Leads from "../Seller/leadseller/Leads";
+import EditLead from "../Seller/leadseller/EditLead";
+import Addlead from "../Seller/leadseller/Addlead";
+// import Leads from "../Seller/Lead/Leads";
 // import EditLead from "../Seller/Lead/EditLead";
-import Addlead from "../Seller/Lead/Addlead";
+// import Addlead from "../Seller/Lead/Addlead";
 const SellerApp = ({ setRole }) => {
   return (
     <Routes>
       <Route path="/seller" element={<SellerLayout setRole={setRole} />}>
         <Route path="overview" element={<Overview />} />
-        <Route path="lead" element={<Leads />} />
-        <Route path="addlead" element={<Addlead />} />
+        <Route path="leads" element={<Leads/>}/>
+        <Route path="editlead" element={<EditLead/>}/>
+        <Route path="addlead" element={<Addlead/>}/>
+        {/* <Route path="lead" element={<Leads />} /> */}
+        {/* <Route path="addlead" element={<Addlead />} /> */}
         {/* <Route path="editlead" element={<EditLead />} /> */}
         <Route path="product" element={<Product />} />
         <Route path="offer" element={<Offer />} />
