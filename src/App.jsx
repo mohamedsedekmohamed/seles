@@ -5,7 +5,7 @@ import Login from './Auth/Login';
 import { useEffect, useState } from 'react';
 import LeaderApp from './Routing/LeaderApp';
 import SellerApp from './Routing/SellerApp';
-import './Index.css';
+import './index.css';
 
 function App() {
   const [role, setRole] = useState(null);
