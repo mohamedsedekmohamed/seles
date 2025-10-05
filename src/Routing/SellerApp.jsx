@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Overview from "../Seller/Overview";
 import SellerLayout from "../Layout/SellerLayout";
-import Lead from "../Seller/Lead/Lead";
+import Lead from "../Seller/Lead/Leads";
 import Product from "../Seller/Product/Product";
 import Offer from "../Seller/Offer/Offer";
 import Commission from '../Seller/Commission/Commission'
@@ -9,8 +9,8 @@ import Scheduled from '../Seller/Scheduled/scheduled'
 import AddScheduled from '../Seller/Scheduled/AddScheduled'
 import AddPayment from '../Seller/Payment/AddPayment'
 import Payment from '../Seller/Payment/Payment'
-import Addlead from "../Seller/lead/Addlead";
-import EditLead from "../Seller/lead/EditLead";
+import Addlead from "../Seller/Lead/Addlead";
+import EditLead from "../Seller/Lead/EditLead";
 import AddPaymentFromLead from "../Seller/Payment/AddPaymentFromLead";
 import EditScheduled from "../Seller/Scheduled/EditScheduled";
 const SellerApp = ({ setRole }) => {
