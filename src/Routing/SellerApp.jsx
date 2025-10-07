@@ -13,9 +13,7 @@ import EditScheduled from "../Seller/Scheduled/EditScheduled";
 import Leads from "../Seller/leadseller/Leads";
 import EditLead from "../Seller/leadseller/EditLead";
 import Addlead from "../Seller/leadseller/Addlead";
-// import Leads from "../Seller/Lead/Leads";
-// import EditLead from "../Seller/Lead/EditLead";
-// import Addlead from "../Seller/Lead/Addlead";
+
 const SellerApp = ({ setRole }) => {
   return (
     <Routes>
@@ -24,9 +22,6 @@ const SellerApp = ({ setRole }) => {
         <Route path="leads" element={<Leads/>}/>
         <Route path="editlead" element={<EditLead/>}/>
         <Route path="addlead" element={<Addlead/>}/>
-        {/* <Route path="lead" element={<Leads />} /> */}
-        {/* <Route path="addlead" element={<Addlead />} /> */}
-        {/* <Route path="editlead" element={<EditLead />} /> */}
         <Route path="product" element={<Product />} />
         <Route path="offer" element={<Offer />} />
         <Route path="commission" element={<Commission />} />

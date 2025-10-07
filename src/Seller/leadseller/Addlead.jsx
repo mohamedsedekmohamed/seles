@@ -9,10 +9,10 @@ import Loading from "../../Ui/Loading";
 import useGet from "../../Hooks/useGet";
 import usePost from "../../Hooks/usePost";
 
-const Addlead = () => {
+const AddLead = () => {
   const [form, setForm] = useState({
     name: "",
-    source_name: "",
+    source_id: "",
     phone: "",
     country: "",
     city: "",
@@ -21,42 +21,55 @@ const Addlead = () => {
 
   const nav = useNavigate();
 
-  // ⬇️ لجلب الانشطة
+  // 🔹 Custom hooks
   const {
-    data: optionsData,
-    loading: loadingOptions,
+    data: activitiesData,
+    loading: loadingActivities,
     get: getActivities,
   } = useGet();
 
-  // ⬇️ لجلب الدول و المدن
+  const {
+    data: sourcesData,
+    loading: loadingSources,
+    get: getSources,
+  } = useGet();
+
   const {
     data: locationsData,
     loading: loadingLocations,
     get: getLocations,
   } = useGet();
 
-  const [activity, setActivity] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [sources, setSources] = useState([]);
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
 
-  // ⬇️ Call APIs
   useEffect(() => {
     getActivities("https://negotia.wegostation.com/api/admin/activities");
-    getLocations(
-      "https://negotia.wegostation.com/api/sales/leads/countries-cities"
-    );
-  }, [getActivities, getLocations]);
+    getLocations("https://negotia.wegostation.com/api/sales/leads/countries-cities");
+    getSources("https://negotia.wegostation.com/api/sales/leads/sources");
+  }, [getActivities, getLocations, getSources]);
 
-  // ⬇️ Parse activities
+  // 🔹 Parse activities
   useEffect(() => {
-    if (optionsData) {
-      setActivity(
-        optionsData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+    if (activitiesData) {
+      setActivities(
+        activitiesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
       );
     }
-  }, [optionsData]);
+  }, [activitiesData]);
 
-  // ⬇️ Parse countries & cities
+  // 🔹 Parse sources
+  useEffect(() => {
+    if (sourcesData) {
+      setSources(
+        sourcesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+      );
+    }
+  }, [sourcesData]);
+
+  // 🔹 Parse countries & cities
   useEffect(() => {
     if (locationsData) {
       setCountries(
@@ -81,74 +94,52 @@ const Addlead = () => {
 
   const { data, loading, error, post } = usePost();
 
+  // 🔹 Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name) {
-      toast.error("Name is required ❌");
-      return;
+    // Validation
+    if (!form.name) return toast.error("Name is required ❌");
+    if (!form.source_id) return toast.error("Source is required ❌");
+    if (!form.phone) return toast.error("Phone is required ❌");
+    if (!form.country) return toast.error("Country is required ❌");
+    if (!form.city) return toast.error("City is required ❌");
+    if (!form.activity_id) return toast.error("Activity is required ❌");
+
+    // API call
+    const res = await post("https://negotia.wegostation.com/api/sales/leads", form);
+
+    if (res?.success) {
+      toast.success("Lead added successfully 🎉");
+      setForm({
+        name: "",
+        phone: "",
+        country: "",
+        city: "",
+        activity_id: "",
+        source_id: "",
+
+      });
+      nav("/seller/leads");
+    } else {
+      const errorMessage =
+        res?.error?.message?.message ||
+        res?.error ||
+        "Something went wrong ❌";
+      toast.error(errorMessage);
     }
-    if (!form.source_name) {
-      toast.error("Source is required ❌");
-      return;
-    }
-
-    if (!form.phone) {
-      toast.error("Phone is required ❌");
-      return;
-    }
-
-    if (!form.country) {
-      toast.error("Country is required ❌");
-      return;
-    }
-
-    if (!form.city) {
-      toast.error("City is required ❌");
-      return;
-    }
-
-    if (!form.activity_id) {
-      toast.error("Activity is required ❌");
-      return;
-    }
-
-  const res = await post(
-  "https://negotia.wegostation.com/api/sales/leads",
-  form
-);
-
-if (res?.success) {
-  toast.success("Lead added successfully 🎉");
-  setForm({
-    name: "",
-    phone: "",
-    country: "",
-    city: "",
-    source_name: "",
-    activity_id: "",
-  });
-  nav("/seller/lead");
-} else {
-  const errorMessage =
-    res?.error?.message?.message || // لو جاية متداخلة
-    res?.error ||                   // لو جاية مباشرة من hook
-    "Something went wrong ❌";       // fallback
-  toast.error(errorMessage);
-}
-
   };
 
-  // ⬇️ Cities filtered by selected country
+  // 🔹 Filter cities by country
   const filteredCities = form.country
     ? cities.filter((c) => c.countryId === form.country)
     : [];
 
   return (
     <div className="p-6 text-white">
-      <Titles title="Add Lead" nav={"/seller/lead"} />
+      <Titles title="Add Lead" nav="/seller/lead" />
 
-      {loadingOptions || loadingLocations ? (
+      {loadingActivities || loadingLocations || loadingSources ? (
         <Loading rows={5} cols={6} />
       ) : (
         <form
@@ -171,14 +162,15 @@ if (res?.success) {
             value={form.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
           />
-          <InputField
-            placeholder="Source Name"
-            name="source_name"
-            value={form.source_name}
-            onChange={(e) => handleChange("source_name", e.target.value)}
+
+          <InputArrow
+            placeholder="Source"
+            name="source_id"
+            value={form.source_id}
+            onChange={(val) => handleChange("source_id", val)}
+            options={sources}
           />
 
-          {/* Country */}
           <InputArrow
             placeholder="Country"
             name="country"
@@ -187,7 +179,6 @@ if (res?.success) {
             options={countries}
           />
 
-          {/* City */}
           <InputArrow
             placeholder="City"
             name="city"
@@ -196,13 +187,12 @@ if (res?.success) {
             options={filteredCities}
           />
 
-          {/* Activity */}
           <InputArrow
             placeholder="Activity"
             name="activity_id"
             value={form.activity_id}
             onChange={(val) => handleChange("activity_id", val)}
-            options={activity}
+            options={activities}
           />
 
           <button
@@ -220,4 +210,4 @@ if (res?.success) {
   );
 };
 
-export default Addlead;
+export default AddLead;

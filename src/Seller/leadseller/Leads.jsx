@@ -8,6 +8,7 @@ import useGet from "../../Hooks/useGet";
 import axios from "axios";
 import AddPaymentFromLead from "../Payment/AddPaymentFromLead";
 import { useNavigate } from "react-router-dom";
+
 const Leads = () => {
   const { loading } = useGet();
   const [edit, setEdit] = useState(false);
@@ -66,7 +67,6 @@ const navigate = useNavigate();
     }
   };
 
-  // ✅ API واحد بس
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -80,9 +80,8 @@ const navigate = useNavigate();
             },
           }
         );
-
         if (response.status === 200) {
-          const data = response.data; // { default, demo, approved, rejected, transfer, active }
+          const data = response.data;
           setTabData(data);
           toast.success("Leads loaded 🎉");
         }
@@ -93,15 +92,13 @@ const navigate = useNavigate();
     };
     fetchData();
   }, [edit]);
-
   const normalizeLead = (lead) => ({
     _id: lead._id,
     name: lead.name || "-",
     phone: lead.phone || "-",
-     country: lead.country ? lead.country.name : "-",   // ✅
+     country: lead.country ? lead.country.name : "-", 
   city: lead.city ? lead.city.name : "-",        
     type: lead.type || "-",
-    // address: lead.address || "-",
     status: lead.status || "-",
     activity_id: lead.activity_id ? lead.activity_id._id : null,
     activity: lead.activity_id ? lead.activity_id.name : "-",
@@ -109,11 +106,36 @@ const navigate = useNavigate();
     created_at: lead.created_at
       ? new Date(lead.created_at).toLocaleString()
       : "-",
+      country_id:lead.country ? lead.country._id: "-",
+      city_id: lead.city ? lead.city._id: "-",
+      source_id: lead.source_id ? lead.source_id._id: "-",
   });
-
-  // ✅ استخدم subTab + mainTab
   const leads = tabData[subTab]?.[`${mainTab}_leads`] || [];
   const normalizedLeads = leads.map(normalizeLead);
+const handleDelete = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.delete(
+      `https://negotia.wegostation.com/api/sales/leads/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      toast.success("Lead deleted successfully 🗑️");
+      setEdit((prev) => !prev); 
+    } else {
+      toast.error("Failed to delete lead ❌");
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("Server error while deleting ❌");
+  }
+};
 
   const filteredData = normalizedLeads.filter((item) => {
     const query = searchQuery.toLowerCase();
@@ -166,7 +188,7 @@ const navigate = useNavigate();
     }
 
     return (
-      <span className="px-4 py-3 text-gray-300 cursor-pointer">
+      <span className=" p-3 text-gray-300 cursor-pointer">
         {status}
       </span>
     );
@@ -187,6 +209,7 @@ const navigate = useNavigate();
       </button>
     ),
   },
+   
     {
   key: "actions",
   label: "Actions",
@@ -221,8 +244,35 @@ const navigate = useNavigate();
 }
 
   ];
+const newColumns = [
+  ...baseColumns,
+  ...(mainTab === "my"
+    ? [
+        {
+          key: "edit",
+          label: "D%E",
+          render: (_, row) => (
+            <div className="flex gap-4">
+            <button
+              onClick={() => navigate("/seller/editlead", { state: row })}
+              className="px-4 py-2 bg-four hover:bg-four/70 text-white rounded-lg transition-all"
+              >
+              Edit
+            </button>
+            <button
+              onClick={()=>handleDelete(row._id)}
+              className="px-4 py-2 bg-red-500 hover:bg-red-800 text-white rounded-lg transition-all"
+              >
+              Delete
+            </button>
+              </div>
+          ),
+        },
+      ]
+    : []),
+];
 
- 
+
   return (
     <div className="p-6 text-white">
       {loading ? (
@@ -291,7 +341,7 @@ const navigate = useNavigate();
 
 
 
-          <Table columns={baseColumns} data={filteredData} pageSize={5} />
+          <Table columns={newColumns} data={filteredData} pageSize={5} />
         </>
       )}
 
