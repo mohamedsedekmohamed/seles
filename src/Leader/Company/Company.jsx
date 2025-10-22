@@ -150,7 +150,9 @@ const columns = [
         setSearchQuery={setSearchQuery}
       />
       {loading ? (
-        <Loading rows={5} cols={6} />
+        <Loading 
+        rows={5} 
+        cols={6} />
       ) : (
         <Table columns={columns} data={filteredProducts} pageSize={5} />
       )}
