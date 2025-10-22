@@ -78,10 +78,10 @@ const handlePayment = (row) => {
   ];
 
   const tableData = filteredOffers.map((item) => ({
-    _id:item._id,
-    lead_name: item.lead_id?.name,
-    lead_phone: item.lead_id?.phone,
-    sales_name: item.sales_id?.name,
+    _id:item.id,
+    lead_name: item.lead?.name,
+    lead_phone: item.lead?.phone,
+    sales_name: item.salesUser?.name,
     contact_date: item.contact_date,
     notes: item.notes,
     status: item.status,

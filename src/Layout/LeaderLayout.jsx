@@ -26,7 +26,7 @@ const LeaderLayout = ({ setRole }) => {
   return (
     <div className="flex overflow-hidden h-screen relative bg-one">
       <aside
-        className={`transition-all bg-one duration-100 ${
+        className={`transition-all  bg-one duration-100 ${
           isOpen ? 'w-56' : 'w-16'
         } border-1 border-r-white rounded-r-2xl p-1 z-10 top-0 h-screen`}
       >

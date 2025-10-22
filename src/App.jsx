@@ -31,7 +31,7 @@ function App() {
         <Route path="/*" element={<Login setRole={setRole} />} />
       )}
  
-      {role === "sales leader" && (
+      {role === "sales_leader" && (
         <Route path="/*" element={<LeaderApp setRole={setRole} />} />
       )}
       {role === "salesman" && (

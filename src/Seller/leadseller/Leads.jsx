@@ -92,24 +92,23 @@ const navigate = useNavigate();
     };
     fetchData();
   }, [edit]);
-  const normalizeLead = (lead) => ({
-    _id: lead._id,
-    name: lead.name || "-",
-    phone: lead.phone || "-",
-     country: lead.country ? lead.country.name : "-", 
-  city: lead.city ? lead.city.name : "-",        
-    type: lead.type || "-",
-    status: lead.status || "-",
-    activity_id: lead.activity_id ? lead.activity_id._id : null,
-    activity: lead.activity_id ? lead.activity_id.name : "-",
-    source: lead.source_id ? lead.source_id.name : "-",
-    created_at: lead.created_at
-      ? new Date(lead.created_at).toLocaleString()
-      : "-",
-      country_id:lead.country ? lead.country._id: "-",
-      city_id: lead.city ? lead.city._id: "-",
-      source_id: lead.source_id ? lead.source_id._id: "-",
-  });
+ const normalizeLead = (lead) => ({
+  _id: lead.id,
+  name: lead.name || "-",
+  phone: lead.phone || "-",
+  country: lead.country ? lead.country.name : "-",
+  city: lead.city ? lead.city.name : "-",
+  type: lead.type || "-",
+  status: lead.status || "-",
+  activity_id: lead.activity ? lead.activity.id : null,
+  activity: lead.activity ? lead.activity.name : "-",
+  source: lead.source ? lead.source.name : "-",
+  created_at: lead.created_at ? new Date(lead.created_at).toLocaleString() : "-",
+  country_id: lead.country ? lead.country.id : "-",
+  city_id: lead.city ? lead.city.id : "-",
+  source_id: lead.source ? lead.source.id : "-",
+});
+
   const leads = tabData[subTab]?.[`${mainTab}_leads`] || [];
   const normalizedLeads = leads.map(normalizeLead);
 const handleDelete = async (id) => {

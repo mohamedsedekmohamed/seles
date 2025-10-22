@@ -26,14 +26,21 @@ const Offer = () => {
     }
   }, [status]);
 
-  const offers = data?.offers || [];
+  const offers = data?.data || [];
 
-  const filteredOffers = offers.filter((o) => {
-    const search = searchQuery.toLowerCase();
-    return Object.values(o).some((value) =>
-      String(value || "").toLowerCase().includes(search)
-    );
-  });
+ const filteredOffers = offers.filter((o) => {
+  const search = searchQuery.toLowerCase();
+
+  const baseValues = Object.values(o);
+  const productValues = o.product ? Object.values(o.product) : [];
+
+  const allValues = [...baseValues, ...productValues];
+
+  return allValues.some((value) =>
+    String(value || "").toLowerCase().includes(search)
+  );
+});
+
 
   const columns = [
     { key: "name", label: "Name" },
@@ -48,7 +55,7 @@ const Offer = () => {
       render: (value) => new Date(value).toLocaleDateString(),
     },
     {
-      key: "discount",
+      key: "discount_type",
       label: "Discount",
       render: (_, row) => (
         <span
@@ -65,23 +72,39 @@ const Offer = () => {
       ),
     },
     {
-      key: "product",
-      label: "Subscription",
-      render: (_, row) => (
-        <div>
-          <p className="font-semibold">{row.product_name}</p>
-          {row.product_subscription_type ? (
-            <p className="text-sm text-gray-400">
-              {row.product_subscription_type} - ${row.product_price}
-            </p>
-          ) : (
-            <p className="text-sm text-gray-400">
-              Setup Fees: ${row.product_setup_fees}
-            </p>
-          )}
+    key: "product_info",
+    label: "Product Info",
+    render: (_, row) => {
+      const product = row.product;
+      if (!product) return null;
+      return (
+        <div className="space-y-0.5 text-sm leading-tight max-w-[150px]">
+          <p className="font-semibold truncate">{product.name}</p>
+          <p className="truncate text-gray-600">{product.description}</p>
         </div>
-      ),
+      );
     },
+  },
+
+  {
+    key: "product_details",
+    label: "Subscription Details",
+    render: (_, row) => {
+      const product = row.product;
+      if (!product) return null;
+      return (
+        <div className="space-y-0.5 text-sm leading-tight max-w-[150px]">
+          <p className="truncate text-gray-500">
+            {product.subscription_type} • ${product.price}
+          </p>
+          <p className="truncate text-gray-500">Fees: ${product.setup_fees}</p>
+          <p className="truncate text-gray-500">
+            Status: {product.status ? "✅" : "❌"}
+          </p>
+        </div>
+      );
+    },
+  },
   ];
 
   return (
@@ -97,7 +120,7 @@ const Offer = () => {
         <Loading rows={5} cols={7} />
       ) : (
         <div className="mt-6">
-          <Table columns={columns} data={filteredOffers} pageSize={3} />
+          <Table columns={columns} data={filteredOffers} pageSize={10} />
         </div>
       )}
 

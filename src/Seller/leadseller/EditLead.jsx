@@ -57,7 +57,7 @@ const EditLead = () => {
   useEffect(() => {
     if (activitiesData) {
       setActivities(
-        activitiesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+        activitiesData.data?.data?.map((l) => ({ id: l.id, name: l.name })) || []
       );
     }
   }, [activitiesData]);
@@ -66,12 +66,11 @@ const EditLead = () => {
   useEffect(() => {
     if (sourcesData) {
       setSources(
-        sourcesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+        sourcesData.data?.data?.map((l) => ({ id: l.id, name: l.name })) || []
       );
     }
   }, [sourcesData]);
 
-  // 🔹 Parse countries & cities
   useEffect(() => {
     if (locationsData) {
       setCountries(
@@ -82,9 +81,9 @@ const EditLead = () => {
       );
       setCities(
         locationsData.data?.data?.cities?.map((c) => ({
-          id: c._id,
+          id: c.id,
           name: c.name,
-          countryId: c.country?._id,
+          countryId: c.country?.id,
         })) || []
       );
     }
@@ -94,8 +93,10 @@ const EditLead = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 const filteredCities = form.country
-  ? cities.filter((c) => c.countryId === form.country)
+  ? cities.filter((c) => c.countryId === Number(form.country))
   : [];
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

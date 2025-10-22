@@ -28,10 +28,12 @@ const Leads = () => {
 
   const leadss = data?.leads || [];
 const changeSales = async (leadId, newSalesId) => {
+      const nuun=Number(newSalesId)
+
   try {
     await axios.post(
       `https://negotia.wegostation.com/api/leader/leads/transfer/${leadId}`,
-      { salesId: newSalesId },
+      { salesId: nuun },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,22 +56,22 @@ const changeSales = async (leadId, newSalesId) => {
     {
       key: "sales_name",
       label: "Sales Name",
-      render: (_, row) => row.sales_id?.name || "—",
+      render: (_, row) => row.sales?.name || "—",
     },
     {
         key: "actions",
     label: "Change Sales",
    render: (_, row) => (
   <select
-    onChange={(e) => changeSales(row._id, e.target.value)}
-    value={row.sales_id?._id || ""} 
+    onChange={(e) => changeSales(row.id, e.target.value)}
+    value={row.sales?.id || ""} 
     className="px-3 py-1 bg-four text-white rounded border border-gray-600"
   >
     <option value="" disabled>
       Select Sales
     </option>
     {data?.salesOptions?.map((sales) => (
-      <option key={sales._id} value={sales._id}>
+      <option key={sales.id} value={sales.id}>
         {sales.name}
       </option>
     ))}

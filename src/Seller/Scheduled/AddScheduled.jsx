@@ -12,8 +12,8 @@ import usePost from "../../Hooks/usePost";
 
 const AddScheduled = () => {
   const nav = useNavigate();
-  const { state } = useLocation(); // ✅ نستقبل البيانات من navigate
-  const isFromOtherPage = !!state; // لو فيه state معناها جاي من صفحة تانية
+  const { state } = useLocation();
+  const isFromOtherPage = !!state; 
 
   const [form, setForm] = useState({
     lead_id: state?._id || "",
@@ -27,13 +27,15 @@ const AddScheduled = () => {
   const [leads, setLeads] = useState([]);
 
   useEffect(() => {
+    console.log(state)
     get("https://negotia.wegostation.com/api/sales/my-scheduled-contacts");
   }, [get]);
 
   useEffect(() => {
     if (optionsData?.data) {
       setLeads(
-        optionsData.data.leadOptions?.map((l) => ({ id: l._id, name: l.name })) ||
+        optionsData.data.leadOptions?.map((l) => ({ id: l.id
+, name: l.name })) ||
           []
       );
     }
@@ -85,7 +87,6 @@ const AddScheduled = () => {
           onSubmit={handleSubmit}
           className="flex flex-col gap-6 mt-6 max-w-xl"
         >
-          {/* ✅ عرض Lead بشكل مختلف حسب الحالة */}
           {isFromOtherPage ? (
             <InputField
               placeholder="Lead"

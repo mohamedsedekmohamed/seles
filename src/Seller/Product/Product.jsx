@@ -73,7 +73,7 @@ const Product = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-start">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product, index) => {
-              const isOpen = openedId === product._id;
+              const isOpen = openedId === product.id;
               return (
                 <div
                   key={index}
@@ -201,9 +201,9 @@ const Product = () => {
 
                   {/* زر التفاصيل */}
                   <div className="mt-5">
-                    <button
+                    <butto
                       onClick={() =>
-                        setOpenedId(isOpen ? null : product._id)
+                        setOpenedId(isOpen ? null : product.id)
                       }
                       className="w-full py-2 px-4 rounded-xl bg-green-600 hover:bg-green-700 transition text-white font-semibold shadow-md flex items-center justify-center gap-2"
                     >
@@ -216,7 +216,7 @@ const Product = () => {
                           View Details <ChevronDown className="w-5 h-5" />
                         </>
                       )}
-                    </button>
+                    </butto>
                   </div>
                 </div>
               );

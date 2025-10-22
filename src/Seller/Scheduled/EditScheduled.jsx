@@ -41,7 +41,7 @@ const EditScheduled = () => {
     if (details?.data?.data) {
       const d = details.data.data;
       setForm({
-        lead_id: d.lead_id?._id || "",
+        lead_id: d.lead?.id || "",
         contact_date: d.contact_date
           ? new Date(d.contact_date).toISOString().split("T")[0]
           : "",
@@ -55,7 +55,7 @@ const EditScheduled = () => {
   useEffect(() => {
     if (optionsData?.data) {
       setLeads(
-        optionsData.data.leadOptions?.map((l) => ({ id: l._id, name: l.name })) || []
+        optionsData.data.leadOptions?.map((l) => ({ id: l.id, name: l.name })) || []
       );
      
     }

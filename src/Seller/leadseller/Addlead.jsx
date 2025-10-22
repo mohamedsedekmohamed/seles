@@ -21,7 +21,6 @@ const AddLead = () => {
 
   const nav = useNavigate();
 
-  // 🔹 Custom hooks
   const {
     data: activitiesData,
     loading: loadingActivities,
@@ -51,38 +50,35 @@ const AddLead = () => {
     getSources("https://negotia.wegostation.com/api/sales/leads/sources");
   }, [getActivities, getLocations, getSources]);
 
-  // 🔹 Parse activities
   useEffect(() => {
     if (activitiesData) {
       setActivities(
-        activitiesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+        activitiesData.data?.data?.map((l) => ({ id: l.id, name: l.name })) || []
       );
     }
   }, [activitiesData]);
 
-  // 🔹 Parse sources
   useEffect(() => {
     if (sourcesData) {
       setSources(
-        sourcesData.data?.data?.map((l) => ({ id: l._id, name: l.name })) || []
+        sourcesData.data?.data?.map((l) => ({ id: l.id, name: l.name })) || []
       );
     }
   }, [sourcesData]);
 
-  // 🔹 Parse countries & cities
   useEffect(() => {
     if (locationsData) {
       setCountries(
         locationsData.data?.data?.countries?.map((c) => ({
-          id: c._id,
+          id: c.id,
           name: c.name,
         })) || []
       );
       setCities(
         locationsData.data?.data?.cities?.map((c) => ({
-          id: c._id,
+          id: c.id,
           name: c.name,
-          countryId: c.country?._id,
+          countryId: c.country?.id,
         })) || []
       );
     }
@@ -96,6 +92,7 @@ const AddLead = () => {
 
   // 🔹 Submit handler
   const handleSubmit = async (e) => {
+  
     e.preventDefault();
 
     // Validation
@@ -130,10 +127,11 @@ const AddLead = () => {
     }
   };
 
-  // 🔹 Filter cities by country
-  const filteredCities = form.country
-    ? cities.filter((c) => c.countryId === form.country)
-    : [];
+// ✅ فلترة المدن حسب الدولة المختارة
+const filteredCities = form.country
+  ? cities.filter((c) => c.countryId === Number(form.country))
+  : [];
+
 
   return (
     <div className="p-6 text-white">

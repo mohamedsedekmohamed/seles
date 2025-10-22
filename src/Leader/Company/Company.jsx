@@ -55,10 +55,11 @@ const Company = () => {
   const leadss = data?.leads || [];
 
   const changeSales = async (leadId, newSalesId) => {
+    const nuun=Number(newSalesId)
   try {
     await axios.post(
       `https://negotia.wegostation.com/api/leader/leads/determine_sales/${leadId}`,
-      { salesId: newSalesId },
+      { salesId: nuun },
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -81,12 +82,12 @@ const columns = [
   {
     key: "sales_id",
     label: "Sales",
-    render: (_, row) => row.sales_id?.name || "—",
+    render: (_, row) => row.sales?.name || "—",
   },
   {
     key: "activity_name",
     label: "Activity Name",
-    render: (_, row) => row.activity_id?.name || "—",
+    render: (_, row) => row.activity?.name || "—",
   },
   // {
   //   key: "activity_status",
@@ -97,7 +98,7 @@ const columns = [
   {
     key: "source_name",
     label: "Source Name",
-    render: (_, row) => row.source_id?.name || "—",
+    render: (_, row) => row.source?.name || "—",
   },
   // {
   //   key: "source_status",
@@ -115,13 +116,13 @@ const columns = [
     label: "Transfer",
     render: (_, row) => (
       <select
-        onChange={(e) => changeSales(row._id, e.target.value)}
-        value={row.sales_id?._id || ""}
+        onChange={(e) => changeSales(row.id, e.target.value)}
+        value={row.sales?.id || ""}
         className="px-3 py-1 bg-four text-white rounded border border-gray-600"
       >
         <option  className="bg-gray-800" value="">Select Sales</option>
         {salesOptions?.map((sales) => (
-          <option className="bg-gray-800" key={sales._id} value={sales._id}>
+          <option className="bg-gray-800" key={sales.id} value={sales.id}>
             {sales.name}
           </option>
         ))}

@@ -30,7 +30,7 @@ setRole(role.toLowerCase());
 
     toast.success("✅ Login successful!");
 
-    if (role.toLowerCase() === "sales leader"){
+    if (role.toLowerCase() === "sales_leader"){
       navigate("/leader/overview");
     } 
     if (role.toLowerCase() === "salesman")

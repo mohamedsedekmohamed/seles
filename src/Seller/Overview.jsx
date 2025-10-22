@@ -133,7 +133,7 @@ const Overview = () => {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    handleMarkAsRead(currentOffer._id);
+                    handleMarkAsRead(currentOffer.id);
                   }}
                   className="w-full bg-yellow-400 text-gray-900 py-3 rounded-lg font-medium hover:bg-yellow-500 transition-all duration-300"
                 >
